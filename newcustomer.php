@@ -80,22 +80,25 @@ if (isset($_POST["publish"])) {
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="dashboard.php">Dashboard</a>
+                        <a class="nav-link" href="dashboard.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="blogposts.php">Posts</a>
+                        <a class="nav-link" href="checkavailability.php">Check Availability</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="categories.php">Categories</a>
+                        <a class="nav-link" href="updatebooking.php">Edit Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin.php">Manage Admins</a>
+                        <a class="nav-link" href="updatebooking.php">Cancel Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Comments</a>
+                        <a class="nav-link" href="managecustomer.php">Manage Customer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Live Blog</a>
+                        <a class="nav-link" href="manageadmin.php">Manage Admin</a>
                     </li>
                     <li class="nav-item">
                         <form method="post">
@@ -150,34 +153,6 @@ if (isset($_POST["publish"])) {
                 </label>
                 <input type="text" name="customer_phone_no" placeholder="Phone Number">
 
-                <!-- <label>
-                    <span class="FieldInfo">Chose Category: </span>
-                </label>
-                <input class="form-control" list="categoryname" name="category-title" placeholder="Category">
-                <datalist id="categoryname">
-                    <--?php
-                    // global $ConnectingDB;
-                    // $sql = "SELECT id,title FROM category";
-                    // $stmt = $ConnectingDB->query($sql);
-
-                    // while ($DataRows = $stmt->fetch()) {
-                    //     $id = $DataRows["id"];
-                    //     $CategoryName = $DataRows["title"]; ?-->
-                    <!-- //     <option value=" <--?php echo $CategoryName ?>"></option>
-                    <--?php }
-                    ?>
-                </datalist> -->
-
-                <!-- <div>
-                    <label for="formFileMultiple" class="form-label">Select Image</label>
-                    <input class="form-control" type="file" id="image" name="image" accept=".jpg, .jpeg, .png">
-                </div> -->
-
-                <!-- <div style="margin-top: 8px; margin-bottom: 5px;">
-                    <label for="exampleFormControlTextarea1" class="form-label">Post: </label>
-                    <textarea class="form-control" name="post" rows="5"></textarea>
-                </div> -->
-
                 <div class="">
                     <div class="">
                         <button formaction="dashboard.php" class="btn btn-outline-light w-100"><i class="fas fa-arrow-left"></i>
@@ -187,6 +162,11 @@ if (isset($_POST["publish"])) {
                         <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
                     </div>
                 </div>
+
+                <div id="new_booking" class="" role="alert" style="display: none;">
+                    <button formaction="selectcar.php" class=""> New Booking </button>
+                </div>
+
             </div>
         </div>
     </form>
@@ -201,6 +181,7 @@ if (isset($_POST["publish"])) {
 
         if (success == true) {
             document.getElementById("success").style.display = "block";
+            document.getElementById("new_booking").style.display = "block";
         }
         if (failed == true) {
             document.getElementById("failed").style.display = "block";

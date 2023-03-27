@@ -21,91 +21,24 @@ if (array_key_exists('logout', $_POST)) {
 $Success = false;
 $Failed = false;
 
-$reservation_id = $_GET["reservation_id"]; // retrieve the value of the "car_model" input field from the POST data
-if (empty($reservation_id)) {
-    header("Location:dashboard.php");
+$customer_id = $_GET["customer_id"]; // retrieve the value of the "car_model" input field from the POST data
+if (empty($customer_id)) {
+    header("Location:managecustomer.php");
 }
 
-if (isset($_POST["car_model"])) {
-    $carmodel = $_POST["car_model"]; // retrieve the value of the "car_model" input field from the POST data
-    if (empty($carmodel)) {
-        header("Location:editcar.php");
-    }
-}
-
-$sql_previous_reservation = "SELECT * FROM reservations WHERE ReservationID = '$reservation_id'";
-$stmt = $ConnectingDB->query($sql_previous_reservation);
+$sql_customers = "SELECT * FROM customers WHERE CustomerID = '$customer_id'";
+$stmt = $ConnectingDB->query($sql_customers);
 
 while ($DataRows = $stmt->fetch()) {
-    $customers_id = $DataRows["CustomerID"];
-    if (empty($carmodel)) {
-        $carmodel = $DataRows["CarID"];
-        $date1 =  $DataRows["PickUpDate"];
-        $date2 =  $DataRows["DropOffDate"];
-    }
+    $customer_name = $DataRows["CustomerName"];
+    $customer_email =  $DataRows["CustomerEmail"];
+    $customer_no =  $DataRows["CustomerPhoneNumber"];
 }
-
-$sql_car = "SELECT * FROM reservations WHERE CarID = '$carmodel'";
-$stmt = $ConnectingDB->query($sql_car);
-
-while ($DataRows = $stmt->fetch()) {
-    if ((isset($date1) && isset($date2)) && ($DataRows["PickUpDate"] != $date1) && ($DataRows["DropOffDate"] != $date2)) {
-        $pick_up[] = $DataRows["PickUpDate"];
-        $drop_off[] = $DataRows["DropOffDate"];
-    }
-}
-
-$sql_admin = "SELECT * FROM admins";
-$stmt = $ConnectingDB->query($sql_admin);
-
-while ($DataRows = $stmt->fetch()) {
-    if ($admin == $DataRows["Username"]) {
-        $staff_id = $DataRows["StaffID"];
-    }
-}
-
-$sql_car_rental = "SELECT * FROM cars";
-$stmt = $ConnectingDB->query($sql_car_rental);
-
-while ($DataRows = $stmt->fetch()) {
-    if ($carmodel == $DataRows["CarID"]) {
-        $rental = $DataRows["RentalPrice"];
-    }
-}
-
 
 if (isset($_POST["submit"])) {
-    if (!empty($_POST["pick_up_date"]) && !empty($_POST["drop_off_date"])) {
-        if (!empty($pick_up)) {
-            for ($i = 0; $i < sizeof($pick_up); $i++) {
-                if ((($_POST["pick_up_date"] >= $pick_up[$i]) && ($_POST["pick_up_date"] <= $drop_off[$i])) || (($_POST["drop_off_date"] >= $pick_up[$i]) && ($_POST["drop_off_date"] <= $drop_off[$i]))) {
-                    $Failed = true;
-                    break;
-                }
-            }
-        }
-
-        if ($Failed == false) {
-            $customer_id = $_POST["customer_id"];
-            $timezone = new DateTimeZone('Asia/Kuala_Lumpur'); // Replace with your timezone
-            $date = new DateTime('now', $timezone);
-            $current_date = $date->format('Y-m-d');
-            $date1 = new DateTime($_POST["pick_up_date"]);
-            $date2 = new DateTime($_POST["drop_off_date"]);
-            $days = $date1->diff($date2)->days + 1;
-            $total_rental = $days * $rental;
-            $status = $_POST["status"];
-
-            $sql_update = "UPDATE reservations SET StaffID = :staffID, CustomerID = :customerID, CarID = :carID, ReservationDate = :reservationDate, PickUpDate = :pickUpDate, DropOffDate = :dropOffDate, RentalDays = :rentalDays, TotalPrice = :totalPrice, Status = :status WHERE ReservationID = :reservationID";
-            $newData = array(':staffID' => $staff_id, ':customerID' => $customer_id, ':carID' => $carmodel, ':reservationDate' => $current_date, ':pickUpDate' => $date1->format('Y-m-d'), ':dropOffDate' => $date2->format('Y-m-d'), ':rentalDays' => $days->days, ':totalPrice' => $total_rental, ':status' => $status, ':reservationID' => $reservation_id);
-            $stmt = $ConnectingDB->prepare($sql_update);
-            $Execute = $stmt->execute($newData);
-
-            $Success = true;
-        }
-    } else {
-        $Failed = true;
-    }
+    $sql_delete = "DELETE FROM customers WHERE CustomerID = '$customer_id'";
+    $Execute = $ConnectingDB->query($sql_delete);
+    $Success = true;
 }
 
 ?>
@@ -134,7 +67,7 @@ if (isset($_POST["submit"])) {
         </symbol>
     </svg>
 
-    <title> Edit Post </title>
+    <title> Delete Customer </title>
 </head>
 
 <body>
@@ -153,7 +86,7 @@ if (isset($_POST["submit"])) {
                     <li class="nav-item">
                         <a class="nav-link" href="checkavailability.php">Check Availability</a>
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
                     </li>
                     <li class="nav-item">
@@ -162,7 +95,7 @@ if (isset($_POST["submit"])) {
                     <li class="nav-item">
                         <a class="nav-link" href="updatebooking.php">Cancel Booking</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="nav-link" href="managecustomer.php">Manage Customer</a>
                     </li>
                     <li class="nav-item">
@@ -178,12 +111,12 @@ if (isset($_POST["submit"])) {
         </div>
     </nav>
 
-    <form class="" action="editbooking.php?reservation_id=<?php echo $reservation_id ?>" method="post" enctype="multipart/form-data">
+    <form class="" action="deletecustomer.php?customer_id=<?php echo $customer_id ?>" method="post" enctype="multipart/form-data">
         <div id="success" class="" role="alert" style="display: none;">
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
                 <use xlink:href="#check-circle-fill" />
             </svg>
-            Successfully edit booking !!
+            Successfully delete customer!!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
@@ -191,30 +124,31 @@ if (isset($_POST["submit"])) {
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
                 <use xlink:href="#exclamation-triangle-fill" />
             </svg>
-            Fail to edit booking !!
+            Fail to delete customer!!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
-        <label>
-            <span class="FieldInfo">Reservation ID: </span>
-        </label>
-        <input type="text" id="country" name="reservation_id" value="<?php echo $reservation_id ?>" readonly>
-
-        <label for="car_model">Car Model: <?php echo $carmodel; ?></label>
-        <input type="hidden" name="car_model" value="<?php echo $carmodel; ?>">
 
         <label>
             <span class="FieldInfo">Customer ID: </span>
         </label>
-        <input class="form-control" name="customer_id" value="<?php echo $customers_id; ?>" readonly>
 
-        <label for="pickupdate">Pick Up Date:</label>
-        <input type="date" id="pickupdate" name="pick_up_date" value="<?php echo $date1; ?>">
+        <input type="text" id="country" name="customer_id" value="<?php echo $customer_id ?>" readonly>
+        <label>
+            <span class=" FieldInfo">Customer Name: </span>
+        </label>
+        <input type="text" name="customer_name" placeholder="Name" value="<?php echo $customer_name ?>" readonly>
 
-        <label for="dropoffdate">Drop Off Date:</label>
-        <input type="date" id="dropoffdate" name="drop_off_date" value="<?php echo $date2; ?>">
+        <label>
+            <span class=" FieldInfo">Customer Email: </span>
+        </label>
+        <input type="text" name="customer_email" placeholder="Email" value="<?php echo $customer_email ?>" readonly>
 
-        <input type="hidden" name="status" value="Unpaid">
+        <label>
+            <span class="FieldInfo">Customer Phone: </span>
+        </label>
+        <input type="text" name="customer_phone_no" placeholder="Phone Number" value="<?php echo $customer_no ?>" readonly>
+
 
         <button formaction="dashboard.php" class=""><i class="fas fa-arrow-left"></i>
             Back to Dashboard</button>
@@ -222,18 +156,12 @@ if (isset($_POST["submit"])) {
 
     </form>
 
-    <div id="payment" class="" role="alert" style="display: none;">
-        <h1>Your reservation id is <?php echo $reservation_id; ?></h1>
-        <a href="payment.php?reservation_id=<?php echo $reservation_id; ?>"><button type="submit" class="btn btn-outline-light w-100"> Make Payment </button></a>
-    </div>
-
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";
         var failed = "<?php echo $Failed ?>";
 
         if (success == true) {
             document.getElementById("success").style.display = "block";
-            document.getElementById("payment").style.display = "block";
         }
         if (failed == true) {
             document.getElementById("failed").style.display = "block";

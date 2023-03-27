@@ -83,8 +83,6 @@ if (isset($_POST["publish"])) {
 
 <body>
 
-
-
     <form class="" action="login.php" method="post" enctype="multipart/form-data">
         <div class="">
             <div class="">

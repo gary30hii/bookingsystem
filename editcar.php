@@ -76,19 +76,25 @@ if (isset($_POST["publish"])) {
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="dashboard.php">Home</a>
+                        <a class="nav-link" href="dashboard.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="blogposts.php">Check Availability</a>
+                        <a class="nav-link" href="checkavailability.php">Check Availability</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="categories.php">New Booking</a>
+                        <a class="nav-link" href="updatebooking.php">Edit Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin.php">Reservation</a>
+                        <a class="nav-link" href="updatebooking.php">Cancel Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Cancel Booking</a>
+                        <a class="nav-link" href="managecustomer.php">Manage Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manageadmin.php">Manage Admin</a>
                     </li>
                     <li class="nav-item">
                         <form method="post">
@@ -100,12 +106,12 @@ if (isset($_POST["publish"])) {
         </div>
     </nav>
 
-    <form class="" action="editbooking.php?reservation_id=<?php echo $reservation_id?>" method="post" enctype="multipart/form-data">
+    <form class="" action="editbooking.php?reservation_id=<?php echo $reservation_id ?>" method="post" enctype="multipart/form-data">
 
         <label>
             <span class="FieldInfo">Reservation ID: </span>
         </label>
-        <input type="text" id="country" name="reservation_id" value="<?php echo $reservation_id?>" readonly>
+        <input type="text" id="country" name="reservation_id" value="<?php echo $reservation_id ?>" readonly>
         <label>
             <span class="FieldInfo">Car Model: </span>
         </label>

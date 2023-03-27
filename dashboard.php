@@ -43,7 +43,7 @@ $sql_admin = "SELECT * FROM admins";
 $stmt = $ConnectingDB->query($sql_admin);
 
 while ($DataRows = $stmt->fetch()) {
-    if($admin == $DataRows["Username"]){
+    if ($admin == $DataRows["Username"]) {
         $admin_name = $DataRows["StaffName"];
     }
 }
@@ -73,19 +73,25 @@ while ($DataRows = $stmt->fetch()) {
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="dashboard.php">Home</a>
+                        <a class="nav-link" href="dashboard.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="blogposts.php">Check Availability</a>
+                        <a class="nav-link" href="checkavailability.php">Check Availability</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="categories.php">New Booking</a>
+                        <a class="nav-link" href="updatebooking.php">Edit Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin.php">Reservation</a>
+                        <a class="nav-link" href="updatebooking.php">Cancel Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Cancel Booking</a>
+                        <a class="nav-link" href="managecustomer.php">Manage Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manageadmin.php">Manage Admin</a>
                     </li>
                     <li class="nav-item">
                         <form method="post">
@@ -110,79 +116,39 @@ while ($DataRows = $stmt->fetch()) {
                 </div>
             <?php } ?>
             <div class="container">
-                <div class="row row-cols-lg-4 ">
+                <div class="">
                     <div class="col">
-                        <a href="newcustomerbooking.php"><button class="btn btn-outline-light w-100"><i class="fas fa-edit"></i>New Booking</button></a>
+                        <a href="newcustomerbooking.php"><button class="btn btn-outline-light w-100">New Booking</button></a>
                     </div>
                     <div class="col">
-                        <a href="newcustomer.php"><button class="btn btn-outline-light w-100"><i class="fa fa-list-alt"></i>New Customer</button></a>
+                        <a href="updatebooking.php"><button class="btn btn-outline-light w-100">Update Booking</button></a>
                     </div>
                     <div class="col">
-                        <a href="addnewadmin.php"><button class="btn btn-outline-light w-100"><i class="fa fa-user-plus"></i>New Admin</button></a>
+                        <a href="newcustomer.php"><button class="btn btn-outline-light w-100">New Customer</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="managecustomer.php"><button class="btn btn-outline-light w-100">Update Customer</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="addnewadmin.php"><button class="btn btn-outline-light w-100">New Admin</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="updateadmin.php"><button class="btn btn-outline-light w-100">Update Admin</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="newcustomer.php"><button class="btn btn-outline-light w-100">New Car</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="updateadmin.php"><button class="btn btn-outline-light w-100">Update Car </button></a>
+                    </div>
+                    <div class="col">
+                        <a href="checkavailability.php"><button class="btn btn-outline-light w-100">Check Availability</button></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container content-div" style="overflow-x:auto;">
-        <table class="table table-striped table-hover table-bordered table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Booking ID</th>
-                    <th scope="col">Customer ID</th>
-                    <th scope="col">Customer Name</th>
-                    <th scope="col">Customer Email</th>
-                    <th scope="col">Customer Phone Number</th>
-                    <th scope="col">Car ID</th>
-                    <th scope="col">Car Model</th>
-                    <th scope="col">Car Type</th>
-                    <th scope="col">Rental Price</th>
-                    <th scope="col">Rental Days</th>
-                    <th scope="col">Reservation Date</th>
-                    <th scope="col">Total Price</th>
-                    <th scope="col">Pick Up Date</th>
-                    <th scope="col">Drop Off Date</th>
-                    <th scope="col">Last Modified by (Staff ID)</th>
-                    <th scope="col">Update</th>
-                    <th scope="col">Cancel</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                for ($i = 0; $i < sizeof($reservation_id); $i++) {
-                ?>
-                    <tr>
-                        <th scope="row"><?php echo $i + 1; ?></th>
-                        <td><?php echo $reservation_id[$i] ?></td>
-                        <td><?php echo $customer_id[$i] ?></td>
-                        <td><?php echo $customer_name[$i] ?></td>
-                        <td><?php echo $customer_email[$i] ?></td>
-                        <td><?php echo $customer_phone_number[$i] ?></td>
-                        <td><?php echo $car_id[$i] ?></td>
-                        <td><?php echo $car_model[$i] ?></td>
-                        <td><?php echo $car_type[$i] ?></td>
-                        <td>RM<?php echo $car_rental[$i] ?></td>
-                        <td><?php echo $rental_days[$i] ?></td>
-                        <td><?php echo $reservation_date[$i] ?></td>
-                        <td>RM<?php echo $total_price[$i] ?></td>
-                        <td><?php echo $pick_up_date[$i] ?></td>
-                        <td><?php echo $drop_off_date[$i] ?></td>
-                        <td><?php echo $staff_id[$i] ?></td>
-                        <td>
-                            <a href="edit.php?reservation_id=<?php echo $reservation_id[$i]; ?>"><button type="submit" class="btn btn-outline-light w-100"> Update </button></a>
-                        </td>
-                        <td>
-                            <a href="deletebooking.php?reservation_id=<?php echo $reservation_id[$i]; ?>"><button type="submit" class="btn btn-outline-light w-100"> Cancel </button></a>
-                        </td>
-                    </tr>
-                <?php
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
 </body>
 
 </html>
