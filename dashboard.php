@@ -133,7 +133,7 @@ while ($DataRows = $stmt->fetch()) {
                         <a href="addnewadmin.php"><button class="btn btn-outline-light w-100">New Admin</button></a>
                     </div>
                     <div class="col">
-                        <a href="updateadmin.php"><button class="btn btn-outline-light w-100">Update Admin</button></a>
+                        <a href="manageadmin.php"><button class="btn btn-outline-light w-100">Update Admin</button></a>
                     </div>
                     <div class="col">
                         <a href="newcustomer.php"><button class="btn btn-outline-light w-100">New Car</button></a>

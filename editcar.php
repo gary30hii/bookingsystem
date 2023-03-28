@@ -14,7 +14,7 @@ if (empty($admin)) {
     header("Location:login.php");
 }
 
-$reservation_id = $_GET["reservation_id"]; // retrieve the value of the "car_model" input field from the POST data
+$reservation_id = $_GET["reservation_id"]; 
 if (empty($reservation_id)) {
     header("Location:dashboard.php");
 }

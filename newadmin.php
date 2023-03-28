@@ -17,25 +17,41 @@ if (array_key_exists('logout', $_POST)) {
     logout();
 }
 
+$sql_admin = "SELECT * FROM admins";
+$stmt = $ConnectingDB->query($sql_admin);
+
+while ($DataRows = $stmt->fetch()) {
+    if ($admin == $DataRows["Username"]) {
+        $admin_name = $DataRows["StaffName"];
+        $admin_position = $DataRows["Position"];
+    }
+    if ($admin_position != "Boss") {
+        $_SESSION["noaccess"] = true;
+        header("Location:manageadmin.php");
+    }
+}
+
 $Success = false;
 $Failed = false;
 
 if (isset($_POST["publish"])) {
-    if (!empty($_POST["customer_name"]) && !empty($_POST["customer_email"]) && !empty($_POST["customer_phone_no"])) {
+    if (!empty($_POST["admin_name"]) && !empty($_POST["username"]) && !empty($_POST["admin_position"]) && !empty($_POST["password"]) && !empty($_POST["confirm_password"])) {
 
-        $customer_name = $_POST["customer_name"];
-        $customer_email = $_POST["customer_email"];
-        $customer_phone_no = $_POST["customer_phone_no"];
+        if ($_POST["password"] == $_POST["confirm_password"]) {
+            $sql = "INSERT INTO admins (StaffName, Username, Position, Password)";
+            $sql .= "VALUES(:staffName, :username, :position, :password)";
+            $stmt = $ConnectingDB->prepare($sql);
+            $stmt->bindValue(':staffName', $_POST["admin_name"]);
+            $stmt->bindValue(':username', $_POST["username"]);
+            $stmt->bindValue(':position', $_POST["admin_position"]);
+            $stmt->bindValue(':password', $_POST["password"]);
 
-        $sql = "INSERT INTO customers (CustomerName, CustomerEmail, CustomerPhoneNumber)";
-        $sql .= "VALUES(:customerName, :customerEmail, :customerPhoneNumber)";
-        $stmt = $ConnectingDB->prepare($sql);
-        $stmt->bindValue(':customerName', $customer_name);
-        $stmt->bindValue(':customerEmail', $customer_email);
-        $stmt->bindValue(':customerPhoneNumber', $customer_phone_no);
-        $Execute = $stmt->execute();
+            $Execute = $stmt->execute();
 
-        $Success = true;
+            $Success = true;
+        }else{
+            $Failed = true;
+        }
     } else {
         $Failed = true;
     }
@@ -85,7 +101,7 @@ if (isset($_POST["publish"])) {
                     <li class="nav-item">
                         <a class="nav-link" href="checkavailability.php">Check Availability</a>
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
                     </li>
                     <li class="nav-item">
@@ -97,7 +113,7 @@ if (isset($_POST["publish"])) {
                     <li class="nav-item">
                         <a class="nav-link" href="managecustomer.php">Manage Customer</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="nav-link" href="manageadmin.php">Manage Admin</a>
                     </li>
                     <li class="nav-item">
@@ -112,21 +128,21 @@ if (isset($_POST["publish"])) {
 
     <div class="container-fluid top-heading">
         <div class="container">
-            Manage Customer
+            Manage Admin
         </div>
     </div>
 
-    <form class="" action="newcustomer.php" method="post" enctype="multipart/form-data">
+    <form class="" action="newadmin.php" method="post" enctype="multipart/form-data">
         <div class="container">
             <div class="header-div">
-                <p>Add New Customer </p>
+                <p>Add New Admin </p>
             </div>
             <div class="">
                 <div id="success" class="" role="alert" style="display: none;">
                     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
                         <use xlink:href="#check-circle-fill" />
                     </svg>
-                    Successfully add new customer !!
+                    Successfully add new admin !!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
@@ -134,24 +150,39 @@ if (isset($_POST["publish"])) {
                     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
                         <use xlink:href="#exclamation-triangle-fill" />
                     </svg>
-                    Fail to add new customer !!
+                    Fail to add new admin !!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <label>
-                    <span class="FieldInfo">Customer Name: </span>
+                    <span class="FieldInfo">Admin Name: </span>
                 </label>
-                <input type="text" name="customer_name" placeholder="Name">
+                <input type="text" name="admin_name" placeholder="Name">
 
                 <label>
-                    <span class="FieldInfo">Customer Email: </span>
+                    <span class="FieldInfo">Username: </span>
                 </label>
-                <input type="text" name="customer_email" placeholder="Email">
+                <input type="text" name="username" placeholder="Username">
 
                 <label>
-                    <span class="FieldInfo">Customer Phone: </span>
+                    <span class="FieldInfo">Admin position: </span>
                 </label>
-                <input type="text" name="customer_phone_no" placeholder="Phone Number">
+                <input class="form-control" list="admin_position" name="admin_position">
+                <datalist id="admin_position">
+                    <option value="Boss">Boss</option>
+                    <option value="Supervisor">Supervisor</option>
+                    <option value="Staff">Staff</option>
+                </datalist>
+
+                <label>
+                    <span class="FieldInfo">Password: </span>
+                </label>
+                <input type="password" name="password" placeholder="Password">
+
+                <label>
+                    <span class="FieldInfo">Confirm Password: </span>
+                </label>
+                <input type="password" name="confirm_password" placeholder="Password">
 
                 <div class="">
                     <div class="">
@@ -162,6 +193,11 @@ if (isset($_POST["publish"])) {
                         <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
                     </div>
                 </div>
+
+                <div id="new_booking" class="" role="alert" style="display: none;">
+                    <button formaction="selectcar.php" class=""> New Booking </button>
+                </div>
+
             </div>
         </div>
     </form>
