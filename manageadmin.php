@@ -127,6 +127,7 @@ while ($DataRows = $stmt->fetch()) {
                         <th scope="col">Staff Position</th>
                         <th scope="col">Update</th>
                         <th scope="col">Cancel</th>
+                        <th scope="col">Change password</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -143,6 +144,9 @@ while ($DataRows = $stmt->fetch()) {
                             </td>
                             <td>
                                 <a href="deleteadmin.php?admin_id=<?php echo $DataRows["StaffID"] ?>"><button type="submit" class="btn btn-outline-light w-100"> Delete </button></a>
+                            </td>
+                            <td>
+                                <a href="changepassword.php?admin_id=<?php echo $DataRows["StaffID"] ?>"><button type="submit" class="btn btn-outline-light w-100"> Change Password </button></a>
                             </td>
                         </tr>
                     <?php

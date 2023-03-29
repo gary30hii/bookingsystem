@@ -144,8 +144,8 @@ if (isset($_POST["submit"])) {
         <label>
             <span class="FieldInfo">Customer ID: </span>
         </label>
-
         <input type="text" id="country" name="customer_id" value="<?php echo $customer_id ?>" readonly>
+
         <label>
             <span class=" FieldInfo">Customer Name: </span>
         </label>

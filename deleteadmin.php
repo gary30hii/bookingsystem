@@ -6,6 +6,13 @@ require_once("include/logout.php");
 
 session_start();
 $admin = $_SESSION['admin'];
+$sql_admin = "SELECT * FROM admins WHERE Username = '$admin'";
+$stmt = $ConnectingDB->query($sql_admin);
+
+while ($DataRows = $stmt->fetch()) {
+    $admin_id = $DataRows["StaffID"];
+    $admin_position = $DataRows["Position"];
+}
 
 if (empty($admin)) {
     $_SESSION['url'] = $_SERVER['REQUEST_URI'];
@@ -17,15 +24,20 @@ if (array_key_exists('logout', $_POST)) {
     logout();
 }
 
-$sql_admin = "SELECT * FROM admins";
-$stmt = $ConnectingDB->query($sql_admin);
+$staff_id = $_GET["admin_id"];
+if (empty($admin_id)) {
+    header("Location:manageadmin.php");
+}
+
+$sql_staff = "SELECT * FROM admins WHERE StaffID = '$staff_id'";
+$stmt = $ConnectingDB->query($sql_staff);
 
 while ($DataRows = $stmt->fetch()) {
-    if ($admin == $DataRows["Username"]) {
-        $admin_name = $DataRows["StaffName"];
-        $admin_position = $DataRows["Position"];
-    }
-    if ($admin_position != "Boss") {
+    if ($admin_position == "Boss") {
+        $staff_name = $DataRows["StaffName"];
+        $staff_position = $DataRows["Position"];
+        $staff_username = $DataRows["Username"];
+    } else {
         $_SESSION["noaccess"] = true;
         header("Location:manageadmin.php");
     }
@@ -35,26 +47,9 @@ $Success = false;
 $Failed = false;
 
 if (isset($_POST["publish"])) {
-    if (!empty($_POST["admin_name"]) && !empty($_POST["username"]) && !empty($_POST["admin_position"]) && !empty($_POST["password"]) && !empty($_POST["confirm_password"])) {
-
-        if ($_POST["password"] == $_POST["confirm_password"]) {
-            $sql = "INSERT INTO admins (StaffName, Username, Position, Password)";
-            $sql .= "VALUES(:staffName, :username, :position, :password)";
-            $stmt = $ConnectingDB->prepare($sql);
-            $stmt->bindValue(':staffName', $_POST["admin_name"]);
-            $stmt->bindValue(':username', $_POST["username"]);
-            $stmt->bindValue(':position', $_POST["admin_position"]);
-            $stmt->bindValue(':password', $_POST["password"]);
-
-            $Execute = $stmt->execute();
-
-            $Success = true;
-        }else{
-            $Failed = true;
-        }
-    } else {
-        $Failed = true;
-    }
+    $sql_delete = "DELETE FROM admins WHERE StaffID = '$staff_id'";
+    $Execute = $ConnectingDB->query($sql_delete);
+    $Success = true;
 }
 
 ?>
@@ -83,7 +78,7 @@ if (isset($_POST["publish"])) {
         </symbol>
     </svg>
 
-    <title> Add New Customer</title>
+    <title> Edit Admin's detail</title>
 </head>
 
 <body>
@@ -132,17 +127,17 @@ if (isset($_POST["publish"])) {
         </div>
     </div>
 
-    <form class="" action="newadmin.php" method="post" enctype="multipart/form-data">
+    <form class="" action="deleteadmin.php?admin_id=<?php echo $staff_id ?>" method="post" enctype="multipart/form-data">
         <div class="container">
             <div class="header-div">
-                <p>Add New Admin </p>
+                <p>Edit Admin </p>
             </div>
             <div class="">
                 <div id="success" class="" role="alert" style="display: none;">
                     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
                         <use xlink:href="#check-circle-fill" />
                     </svg>
-                    Successfully add new admin !!
+                    Successfully edit admin's detail !!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
@@ -150,39 +145,30 @@ if (isset($_POST["publish"])) {
                     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
                         <use xlink:href="#exclamation-triangle-fill" />
                     </svg>
-                    Fail to add new admin !!
+                    Fail to edit admin's detail !!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <label>
+                    <span class="FieldInfo">Staff ID: </span>
+                </label>
+                <input type="text" id="country" name="Staff_id" value="<?php echo $staff_id ?>" readonly>
+
+                <label>
                     <span class="FieldInfo">Admin Name: </span>
                 </label>
-                <input type="text" name="admin_name" placeholder="Name">
+                <input type="text" name="admin_name" placeholder="Name" value="<?php echo $staff_name ?>" readonly>
 
                 <label>
                     <span class="FieldInfo">Username: </span>
                 </label>
-                <input type="text" name="username" placeholder="Username">
+                <input type="text" name="username" placeholder="Username" value="<?php echo $staff_username ?>" readonly>
 
                 <label>
                     <span class="FieldInfo">Admin position: </span>
                 </label>
-                <input class="form-control" list="admin_position" name="admin_position">
-                <datalist id="admin_position">
-                    <option value="Boss">Boss</option>
-                    <option value="Supervisor">Supervisor</option>
-                    <option value="Staff">Staff</option>
-                </datalist>
 
-                <label>
-                    <span class="FieldInfo">Password: </span>
-                </label>
-                <input type="password" name="password" placeholder="Password">
-
-                <label>
-                    <span class="FieldInfo">Confirm Password: </span>
-                </label>
-                <input type="password" name="confirm_password" placeholder="Password">
+                <input class="form-control" list="admin_position" name="admin_position" value="<?php echo $staff_position ?>" readonly>
 
                 <div class="">
                     <div class="">

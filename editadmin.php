@@ -6,6 +6,13 @@ require_once("include/logout.php");
 
 session_start();
 $admin = $_SESSION['admin'];
+$sql_admin = "SELECT * FROM admins WHERE Username = '$admin'";
+$stmt = $ConnectingDB->query($sql_admin);
+
+while ($DataRows = $stmt->fetch()) {
+    $admin_id = $DataRows["StaffID"];
+    $admin_position = $DataRows["Position"];
+}
 
 if (empty($admin)) {
     $_SESSION['url'] = $_SERVER['REQUEST_URI'];
@@ -17,23 +24,23 @@ if (array_key_exists('logout', $_POST)) {
     logout();
 }
 
-$admin_id = $_GET["admin_id"];
+$staff_id = $_GET["admin_id"];
 if (empty($admin_id)) {
     header("Location:manageadmin.php");
 }
 
-$sql_admin = "SELECT * FROM admins WHERE StaffID = '$admin_id'";
-$stmt = $ConnectingDB->query($sql_admin);
+$sql_staff = "SELECT * FROM admins WHERE StaffID = '$staff_id'";
+$stmt = $ConnectingDB->query($sql_staff);
 
 while ($DataRows = $stmt->fetch()) {
-    if ($admin == $DataRows["Username"]) {
-        $admin_name = $DataRows["StaffName"];
-        $admin_position = $DataRows["Position"];
-        $staff_id = $DataRows["StaffID"];
-    }
-    if (!($staff_id == $admin_id)) {
+    if ($admin_id == $staff_id || $admin_position == "Boss") {
+        $staff_name = $DataRows["StaffName"];
+        $staff_position = $DataRows["Position"];
+        $staff_username = $DataRows["Username"];
+    } else {
         $_SESSION["noaccess"] = true;
         header("Location:manageadmin.php");
+
     }
 }
 
@@ -41,19 +48,14 @@ $Success = false;
 $Failed = false;
 
 if (isset($_POST["publish"])) {
-    if (!empty($_POST["admin_name"]) && !empty($_POST["username"]) && !empty($_POST["admin_position"]) && !empty($_POST["password"]) && !empty($_POST["confirm_password"])) {
+    if (!empty($_POST["admin_name"]) && !empty($_POST["username"]) && !empty($_POST["admin_position"])) {
 
-        if ($_POST["password"] == $_POST["confirm_password"]) {
+        $sql_update = "UPDATE admins SET StaffName = :staffName, Username = :username, Position = :position WHERE StaffID = :staffID";
+        $newData = array(':staffName' => $_POST["admin_name"], ':username' => $_POST["username"], ':position' => $_POST["admin_position"], ':staffID' => $admin_id);
+        $stmt = $ConnectingDB->prepare($sql_update);
+        $Execute = $stmt->execute($newData);
 
-            $sql_update = "UPDATE admins SET StaffName = :staffName, Username = :username, Position = :position, Password = :password WHERE StaffID = :staffID";
-            $newData = array(':staffName' => $_POST["admin_name"], ':username' => $_POST["username"], ':position' => $_POST["admin_position"], ':password' => $_POST["password"], ':staffID' => $admin_id);
-            $stmt = $ConnectingDB->prepare($sql_update);
-            $Execute = $stmt->execute($newData);
-
-            $Success = true;
-        } else {
-            $Failed = true;
-        }
+        $Success = true;
     } else {
         $Failed = true;
     }
@@ -85,7 +87,7 @@ if (isset($_POST["publish"])) {
         </symbol>
     </svg>
 
-    <title> Edit Admin's detail</title>
+    <title> Delete Admin</title>
 </head>
 
 <body>
@@ -144,7 +146,7 @@ if (isset($_POST["publish"])) {
                     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
                         <use xlink:href="#check-circle-fill" />
                     </svg>
-                    Successfully edit admin's detail !!
+                    Successfully delete admin !!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
@@ -152,39 +154,38 @@ if (isset($_POST["publish"])) {
                     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
                         <use xlink:href="#exclamation-triangle-fill" />
                     </svg>
-                    Fail to edit admin's detail !!
+                    Fail to delete admin !!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <label>
+                    <span class="FieldInfo">Staff ID: </span>
+                </label>
+                <input type="text" id="country" name="Staff_id" value="<?php echo $staff_id ?>" readonly>
+
+                <label>
                     <span class="FieldInfo">Admin Name: </span>
                 </label>
-                <input type="text" name="admin_name" placeholder="Name">
+                <input type="text" name="admin_name" placeholder="Name" value="<?php echo $staff_name ?>">
 
                 <label>
                     <span class="FieldInfo">Username: </span>
                 </label>
-                <input type="text" name="username" placeholder="Username">
+                <input type="text" name="username" placeholder="Username" value="<?php echo $staff_username ?>">
 
                 <label>
                     <span class="FieldInfo">Admin position: </span>
                 </label>
-                <input class="form-control" list="admin_position" name="admin_position">
-                <datalist id="admin_position">
-                    <option value="Boss">Boss</option>
-                    <option value="Supervisor">Supervisor</option>
-                    <option value="Staff">Staff</option>
-                </datalist>
-
-                <label>
-                    <span class="FieldInfo">Password: </span>
-                </label>
-                <input type="password" name="password" placeholder="Password">
-
-                <label>
-                    <span class="FieldInfo">Confirm Password: </span>
-                </label>
-                <input type="password" name="confirm_password" placeholder="Password">
+                <?php if ($admin_position == "Boss") { ?>
+                    <input class="form-control" list="admin_position" name="admin_position" value="<?php echo $staff_position ?>">
+                    <datalist id="admin_position">
+                        <option value="Boss">Boss</option>
+                        <option value="Supervisor">Supervisor</option>
+                        <option value="Staff">Staff</option>
+                    </datalist>
+                <?php } else { ?>
+                    <input class="form-control" list="admin_position" name="admin_position" value="<?php echo $staff_position ?>" readonly>
+                <?php } ?>
 
                 <div class="">
                     <div class="">
