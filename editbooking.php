@@ -94,10 +94,9 @@ if (isset($_POST["submit"])) {
             $date2 = new DateTime($_POST["drop_off_date"]);
             $days = $date1->diff($date2)->days + 1;
             $total_rental = $days * $rental;
-            $status = $_POST["status"];
 
-            $sql_update = "UPDATE reservations SET StaffID = :staffID, CustomerID = :customerID, CarID = :carID, ReservationDate = :reservationDate, PickUpDate = :pickUpDate, DropOffDate = :dropOffDate, RentalDays = :rentalDays, TotalPrice = :totalPrice, Status = :status WHERE ReservationID = :reservationID";
-            $newData = array(':staffID' => $staff_id, ':customerID' => $customer_id, ':carID' => $carmodel, ':reservationDate' => $current_date, ':pickUpDate' => $date1->format('Y-m-d'), ':dropOffDate' => $date2->format('Y-m-d'), ':rentalDays' => $days->days, ':totalPrice' => $total_rental, ':status' => $status, ':reservationID' => $reservation_id);
+            $sql_update = "UPDATE reservations SET StaffID = :staffID, CustomerID = :customerID, CarID = :carID, ReservationDate = :reservationDate, PickUpDate = :pickUpDate, DropOffDate = :dropOffDate, RentalDays = :rentalDays, TotalPrice = :totalPrice WHERE ReservationID = :reservationID";
+            $newData = array(':staffID' => $staff_id, ':customerID' => $customer_id, ':carID' => $carmodel, ':reservationDate' => $current_date, ':pickUpDate' => $date1->format('Y-m-d'), ':dropOffDate' => $date2->format('Y-m-d'), ':rentalDays' => $days->days, ':totalPrice' => $total_rental, ':reservationID' => $reservation_id);
             $stmt = $ConnectingDB->prepare($sql_update);
             $Execute = $stmt->execute($newData);
 
@@ -214,18 +213,11 @@ if (isset($_POST["submit"])) {
         <label for="dropoffdate">Drop Off Date:</label>
         <input type="date" id="dropoffdate" name="drop_off_date" value="<?php echo $date2; ?>">
 
-        <input type="hidden" name="status" value="Unpaid">
-
         <button formaction="dashboard.php" class=""><i class="fas fa-arrow-left"></i>
             Back to Dashboard</button>
         <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
 
     </form>
-
-    <div id="payment" class="" role="alert" style="display: none;">
-        <h1>Your reservation id is <?php echo $reservation_id; ?></h1>
-        <a href="payment.php?reservation_id=<?php echo $reservation_id; ?>"><button type="submit" class="btn btn-outline-light w-100"> Make Payment </button></a>
-    </div>
 
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";
@@ -233,7 +225,6 @@ if (isset($_POST["submit"])) {
 
         if (success == true) {
             document.getElementById("success").style.display = "block";
-            document.getElementById("payment").style.display = "block";
         }
         if (failed == true) {
             document.getElementById("failed").style.display = "block";

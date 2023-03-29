@@ -136,12 +136,6 @@ while ($DataRows = $stmt->fetch()) {
                         <a href="manageadmin.php"><button class="btn btn-outline-light w-100">Update Admin</button></a>
                     </div>
                     <div class="col">
-                        <a href="newcustomer.php"><button class="btn btn-outline-light w-100">New Car</button></a>
-                    </div>
-                    <div class="col">
-                        <a href="updateadmin.php"><button class="btn btn-outline-light w-100">Update Car </button></a>
-                    </div>
-                    <div class="col">
                         <a href="checkavailability.php"><button class="btn btn-outline-light w-100">Check Availability</button></a>
                     </div>
                 </div>
