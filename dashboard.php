@@ -1,54 +1,32 @@
 <?php
-// ini_set('display_errors', '1');
 
-require_once("include/db.php");
-require_once("include/logout.php");
+require_once("include/db.php"); // Include the database connection file
+require_once("include/logout.php"); // Include the logout function
 
-session_start();
-$admin = $_SESSION['admin'];
+session_start(); // Start the session
+$admin = $_SESSION['admin']; // Get the admin username from the session
 
-if (empty($admin)) {
+if (empty($admin)) { // If the admin username is empty
     $_SESSION['url'] = $_SERVER['REQUEST_URI'];
-    $_SESSION["noadmin"] = true;
-    header("Location:login.php");
+    $_SESSION["noadmin"] = true; // Set a flag to indicate that there is no admin
+    header("Location:login.php"); // Redirect to the login page
 }
 
-if (array_key_exists('logout', $_POST)) {
-    logout();
+if (array_key_exists('logout', $_POST)) { // If the logout button is clicked
+    logout(); // Call the logout function
 }
 
-global $ConnectingDB;
-$sql = "SELECT * FROM reservations, customers, cars, car_types where reservations.CustomerID = customers.CustomerID AND reservations.CarID = cars.CarID AND cars.CarType = car_types.TypeID";
-$stmt = $ConnectingDB->query($sql);
+$sql_admin = "SELECT * FROM admins"; // Select all admins from the admins table
+$stmt = $ConnectingDB->query($sql_admin); // Execute the query
 
-while ($DataRows = $stmt->fetch()) {
-    $reservation_id[] = $DataRows["ReservationID"];
-    $staff_id[] = $DataRows["StaffID"];
-    $customer_id[] = $DataRows["CustomerID"];
-    $car_id[] = $DataRows["CarID"];
-    $reservation_date[] = $DataRows["ReservationDate"];
-    $rental_days[] = $DataRows["RentalDays"];
-    $total_price[] = $DataRows["TotalPrice"];
-    $pick_up_date[] = $DataRows["PickUpDate"];
-    $drop_off_date[] = $DataRows["DropOffDate"];
-    $customer_name[] = $DataRows["CustomerName"];
-    $customer_email[] = $DataRows["CustomerEmail"];
-    $customer_phone_number[] = $DataRows["CustomerPhoneNumber"];
-    $car_model[] = $DataRows["CarModel"];
-    $car_type[] = $DataRows["CarTypes"];
-    $car_rental[] = $DataRows["RentalPrice"];
-}
-
-$sql_admin = "SELECT * FROM admins";
-$stmt = $ConnectingDB->query($sql_admin);
-
-while ($DataRows = $stmt->fetch()) {
-    if ($admin == $DataRows["Username"]) {
-        $admin_name = $DataRows["StaffName"];
+while ($DataRows = $stmt->fetch()) { // Loop through the results
+    if ($admin == $DataRows["Username"]) { // If the admin username matches
+        $admin_name = $DataRows["StaffName"]; // Set the admin name
     }
 }
 
 ?>
+
 
 <!DOCTYPE html>
 
