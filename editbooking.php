@@ -1,53 +1,29 @@
 <?php
 ini_set('display_errors', '1');
 
+// Include necessary files
 require_once("include/db.php");
 require_once("include/logout.php");
-
-session_start();
-$admin = $_SESSION['admin'];
-global $ConnectingDB;
-
-if (empty($admin)) {
-    $_SESSION['url'] = $_SERVER['REQUEST_URI'];
-    $_SESSION["noadmin"] = true;
-    header("Location:login.php");
-}
-
-if (array_key_exists('logout', $_POST)) {
-    logout();
-}
+require_once("include/checkadmin.php"); 
+require_once("include/checkreservationid.php"); 
+require_once("include/main.php"); 
 
 $Success = false;
 $Failed = false;
 
-$reservation_id = $_GET["reservation_id"]; // retrieve the value of the "car_model" input field from the POST data
-if (empty($reservation_id)) {
-    header("Location:dashboard.php");
-}
-
+// Check if car model was submitted in POST request
 if (isset($_POST["car_model"])) {
     $carmodel = $_POST["car_model"]; // retrieve the value of the "car_model" input field from the POST data
     if (empty($carmodel)) {
-        header("Location:editcar.php");
+        header("Location:editcar.php"); // redirect to editcar.php if the car model is empty
     }
 }
 
-$sql_previous_reservation = "SELECT * FROM reservations WHERE ReservationID = '$reservation_id'";
-$stmt = $ConnectingDB->query($sql_previous_reservation);
-
-while ($DataRows = $stmt->fetch()) {
-    $customers_id = $DataRows["CustomerID"];
-    if (empty($carmodel)) {
-        $carmodel = $DataRows["CarID"];
-        $date1 =  $DataRows["PickUpDate"];
-        $date2 =  $DataRows["DropOffDate"];
-    }
-}
-
+// Select all reservations for the given car model
 $sql_car = "SELECT * FROM reservations WHERE CarID = '$carmodel'";
 $stmt = $ConnectingDB->query($sql_car);
 
+// Loop through the reservations for the given car model to get the pickup and drop-off dates
 while ($DataRows = $stmt->fetch()) {
     if ((isset($date1) && isset($date2)) && ($DataRows["PickUpDate"] != $date1) && ($DataRows["DropOffDate"] != $date2)) {
         $pick_up[] = $DataRows["PickUpDate"];
@@ -55,55 +31,59 @@ while ($DataRows = $stmt->fetch()) {
     }
 }
 
+// Select all admins
 $sql_admin = "SELECT * FROM admins";
 $stmt = $ConnectingDB->query($sql_admin);
 
+// Loop through the admins to get the staff ID for the given admin username
 while ($DataRows = $stmt->fetch()) {
     if ($admin == $DataRows["Username"]) {
         $staff_id = $DataRows["StaffID"];
     }
 }
 
+// Select all cars
 $sql_car_rental = "SELECT * FROM cars";
 $stmt = $ConnectingDB->query($sql_car_rental);
 
+// Loop through the cars to get the rental price for the given car model
 while ($DataRows = $stmt->fetch()) {
     if ($carmodel == $DataRows["CarID"]) {
         $rental = $DataRows["RentalPrice"];
     }
 }
-
-
-if (isset($_POST["submit"])) {
-    if (!empty($_POST["pick_up_date"]) && !empty($_POST["drop_off_date"])) {
-        if (!empty($pick_up)) {
+if (isset($_POST["submit"])) { // check if the submit button was clicked
+    if (!empty($_POST["pick_up_date"]) && !empty($_POST["drop_off_date"])) { // check if the pick-up date and drop-off date fields are not empty
+        if (!empty($pick_up)) { // check if the pick_up array is not empty
+            // loop through the pick_up and drop_off arrays to check for overlapping dates
             for ($i = 0; $i < sizeof($pick_up); $i++) {
                 if ((($_POST["pick_up_date"] >= $pick_up[$i]) && ($_POST["pick_up_date"] <= $drop_off[$i])) || (($_POST["drop_off_date"] >= $pick_up[$i]) && ($_POST["drop_off_date"] <= $drop_off[$i]))) {
-                    $Failed = true;
+                    $Failed = true; // set the $Failed variable to true if there is a date overlap
                     break;
                 }
             }
         }
 
-        if ($Failed == false) {
-            $customer_id = $_POST["customer_id"];
-            $timezone = new DateTimeZone('Asia/Kuala_Lumpur'); // Replace with your timezone
-            $date = new DateTime('now', $timezone);
-            $current_date = $date->format('Y-m-d');
-            $date1 = new DateTime($_POST["pick_up_date"]);
-            $date2 = new DateTime($_POST["drop_off_date"]);
-            $days = $date1->diff($date2)->days + 1;
-            $total_rental = $days * $rental;
+        if ($Failed == false) { // check if there were no date overlaps
+            $customer_id = $_POST["customer_id"]; // retrieve the customer ID from the POST data
+            $timezone = new DateTimeZone('Asia/Kuala_Lumpur'); // create a new DateTimeZone object with the specified timezone
+            $date = new DateTime('now', $timezone); // create a new DateTime object with the current date and the specified timezone
+            $current_date = $date->format('Y-m-d'); // format the current date as YYYY-MM-DD
+            $date1 = new DateTime($_POST["pick_up_date"]); // create a new DateTime object with the pick-up date
+            $date2 = new DateTime($_POST["drop_off_date"]); // create a new DateTime object with the drop-off date
+            $days = $date1->diff($date2)->days + 1; // calculate the number of rental days
+            $total_rental = $days * $rental; // calculate the total rental price
 
+            // create an SQL query to update the reservation with the new data
             $sql_update = "UPDATE reservations SET StaffID = :staffID, CustomerID = :customerID, CarID = :carID, ReservationDate = :reservationDate, PickUpDate = :pickUpDate, DropOffDate = :dropOffDate, RentalDays = :rentalDays, TotalPrice = :totalPrice WHERE ReservationID = :reservationID";
-            $newData = array(':staffID' => $staff_id, ':customerID' => $customer_id, ':carID' => $carmodel, ':reservationDate' => $current_date, ':pickUpDate' => $date1->format('Y-m-d'), ':dropOffDate' => $date2->format('Y-m-d'), ':rentalDays' => $days->days, ':totalPrice' => $total_rental, ':reservationID' => $reservation_id);
-            $stmt = $ConnectingDB->prepare($sql_update);
-            $Execute = $stmt->execute($newData);
+            $newData = array(':staffID' => $staff_id, ':customerID' => $customer_id, ':carID' => $carmodel, ':reservationDate' => $current_date, ':pickUpDate' => $date1->format('Y-m-d'), ':dropOffDate' => $date2->format('Y-m-d'), ':rentalDays' => $days, ':totalPrice' => $total_rental, ':reservationID' => $reservation_id);
+            $stmt = $ConnectingDB->prepare($sql_update); // prepare the SQL query
+            $Execute = $stmt->execute($newData); // execute the SQL query with the new data
 
-            $Success = true;
+            $Success = true; // set the $Success variable to true if the update was successful
         }
     } else {
-        $Failed = true;
+        $Failed = true; // set the $Failed variable to true if either the pick-up date or the drop-off date fields are empty
     }
 }
 
@@ -117,23 +97,8 @@ if (isset($_POST["submit"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="include/fontawesome-5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
 
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-        </symbol>
-        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-        </symbol>
-        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-        </symbol>
-    </svg>
-
-    <title> Edit Post </title>
+    <title> Edit Booking  </title>
 </head>
 
 <body>
@@ -177,19 +142,13 @@ if (isset($_POST["submit"])) {
         </div>
     </nav>
 
-    <form class="" action="editbooking.php?reservation_id=<?php echo $reservation_id ?>" method="post" enctype="multipart/form-data">
+    <form class="" action="editbooking.php?reservation_id=<?php echo $reservation_id ?>" method="post" enctype="multipart/form-data" onsubmit="return validateDates();">
         <div id="success" class="" role="alert" style="display: none;">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-                <use xlink:href="#check-circle-fill" />
-            </svg>
             Successfully edit booking !!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
         <div id="failed" class="" role="alert" style="display: none;">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
-                <use xlink:href="#exclamation-triangle-fill" />
-            </svg>
             Fail to edit booking !!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -208,16 +167,17 @@ if (isset($_POST["submit"])) {
         <input class="form-control" name="customer_id" value="<?php echo $customers_id; ?>" readonly>
 
         <label for="pickupdate">Pick Up Date:</label>
-        <input type="date" id="pickupdate" name="pick_up_date" value="<?php echo $date1; ?>">
+        <input type="date" id="pickupdate" name="pick_up_date" value="" required>
 
         <label for="dropoffdate">Drop Off Date:</label>
-        <input type="date" id="dropoffdate" name="drop_off_date" value="<?php echo $date2; ?>">
+        <input type="date" id="dropoffdate" name="drop_off_date" value="" required>
 
-        <button formaction="dashboard.php" class=""><i class="fas fa-arrow-left"></i>
-            Back to Dashboard</button>
         <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
 
     </form>
+
+    <a href="edit.php?reservation_id=<?php echo $reservation_id ?>"><button class=""><i class="fas fa-arrow-left"></i>
+            Back</button></a>
 
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";
@@ -230,6 +190,8 @@ if (isset($_POST["submit"])) {
             document.getElementById("failed").style.display = "block";
         }
     </script>
+    <script src="include/date.js"></script>
+
 </body>
 
 </html>

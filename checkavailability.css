@@ -96,7 +96,7 @@ header .icons span:hover
   height:30px; 
   max-height:30px;
   vertical-align: middle;
-  margin-bottom: 370px;
+  margin-bottom: 70px;
 }
 
 /*affects days from previous month*/
@@ -139,10 +139,9 @@ header .icons span:hover
 
 .event
 {
-  background-color: lightblue;
+  background-color: black;
   border-top: solid;
   border-radius: 30px;
-  font-size: 0.8vw;
 }
 
 

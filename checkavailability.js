@@ -5,8 +5,6 @@ let date = new Date();
 let currYear = date.getFullYear();
 let currMonth = date.getMonth();
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const cars = ["Rolls Royce Phantom ", "Bentley Continental Flying Spur", "Mercedes Benz CLS 350", "Jaguar S Type", "Ferrari F430 Scuderia", 
-"Lamborghini Murcielago LP640", "Porsche Boxster", "Lexus SC430", "Jaguar MK 2", "Rolls Royce Silver Spirit Limousine ", "MG TD"];
 var events = [];
 
 const addEvent = (eventName, startDate, endDate) => 
@@ -75,9 +73,9 @@ const renderCalendar = () => {
   daysTag.innerHTML = liTag;
 };
 
-for(i=0; i < reservations.length; i++)
+for(let i=0; i < reservations.length; i++)
 {
-  addEvent(cars[reservations[i].CarID-1], new Date(reservations[i].PickUpDate), new Date(reservations[i].DropOffDate));
+  addEvent(reservations[i].CustomerName, new Date(reservations[i].PickUpDate), new Date(reservations[i].DropOffDate));
 };
 
 

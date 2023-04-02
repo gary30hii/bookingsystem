@@ -1,34 +1,13 @@
 <?php
-ini_set('display_errors', '1');
 
+// Include necessary files
 require_once("include/db.php");
 require_once("include/logout.php");
-
-session_start();
-$admin = $_SESSION['admin'];
-
-if (empty($admin)) {
-    $_SESSION['url'] = $_SERVER['REQUEST_URI'];
-    $_SESSION["noadmin"] = true;
-    header("Location:login.php");
-}
-
-if (array_key_exists('logout', $_POST)) {
-    logout();
-}
-
-$sql_admin = "SELECT * FROM admins";
-$stmt = $ConnectingDB->query($sql_admin);
-
-while ($DataRows = $stmt->fetch()) {
-    if ($admin == $DataRows["Username"]) {
-        $admin_name = $DataRows["StaffName"];
-    }
-}
-
-
+require_once("include/checkadmin.php");
+require_once("include/main.php"); 
 
 ?>
+
 
 <!DOCTYPE html>
 
@@ -39,7 +18,7 @@ while ($DataRows = $stmt->fetch()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title> Dashboard </title>
+    <title> Reservation list </title>
 </head>
 
 <body>
@@ -89,27 +68,36 @@ while ($DataRows = $stmt->fetch()) {
     </form>
 
     <?php
+    // Check if the "id" parameter is set in the URL
     if (isset($_GET['id'])) {
+        // Get the "id" parameter and filter it to only allow numbers
         $id =  $_GET['id'];
         $id = filter_var($id, FILTER_SANITIZE_NUMBER_INT);
     } else {
+        // If the "id" parameter is not set, set $id to an empty string
         $id = "";
     }
 
+    // Add wildcard characters to the beginning and end of the ID to allow partial matches
     $id = "%" . $id . "%";
+
+    // Query the database to get reservations that match the ID
     $sql = "SELECT * 
-        FROM reservations 
-        JOIN customers ON reservations.CustomerID = customers.CustomerID 
-        JOIN cars ON reservations.CarID = cars.CarID 
-        JOIN car_types ON cars.CarType = car_types.TypeID
-        WHERE reservations.ReservationID LIKE '$id'
-        ";
+    FROM reservations 
+    JOIN customers ON reservations.CustomerID = customers.CustomerID 
+    JOIN cars ON reservations.CarID = cars.CarID 
+    JOIN car_types ON cars.CarType = car_types.TypeID
+    WHERE reservations.ReservationID LIKE '$id'
+    ";
     $reservation_stmt = $ConnectingDB->query($sql);
 
+    // If there are rows returned from the query, display them in a table
     if ($reservation_stmt->rowCount() > 0) {
     ?>
+        <!-- Display a table of reservation records -->
         <div class="container content-div" style="overflow-x:auto;">
             <table class="table table-striped table-hover table-bordered table-dark">
+                <!-- Table headers -->
                 <thead>
                     <tr>
                         <th scope="col">Booking ID</th>
@@ -131,8 +119,10 @@ while ($DataRows = $stmt->fetch()) {
                         <th scope="col">Cancel</th>
                     </tr>
                 </thead>
+                <!-- Table body -->
                 <tbody>
                     <?php
+                    // Loop through each reservation record and display the information in a table row
                     while ($DataRows = $reservation_stmt->fetch()) {
                     ?>
                         <tr>
@@ -151,9 +141,11 @@ while ($DataRows = $stmt->fetch()) {
                             <td><?php echo $DataRows["PickUpDate"] ?></td>
                             <td><?php echo $DataRows["DropOffDate"] ?></td>
                             <td><?php echo $DataRows["StaffID"] ?></td>
+                            <!-- Link to update reservation record -->
                             <td>
                                 <a href="edit.php?reservation_id=<?php echo $DataRows["ReservationID"] ?>"><button type="submit" class="btn btn-outline-light w-100"> Update </button></a>
                             </td>
+                            <!-- Link to cancel reservation record -->
                             <td>
                                 <a href="deletebooking.php?reservation_id=<?php echo $DataRows["ReservationID"] ?>"><button type="submit" class="btn btn-outline-light w-100"> Cancel </button></a>
                             </td>
@@ -167,6 +159,7 @@ while ($DataRows = $stmt->fetch()) {
 
     <?php
     } else {
+        // Display a message if no reservation records were found
         echo "<h1>No record found</h1>";
     }
     ?>

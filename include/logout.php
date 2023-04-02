@@ -5,4 +5,5 @@
         unset($_SESSION["url"]);
         header("Location:login.php");
     }
+
 ?>

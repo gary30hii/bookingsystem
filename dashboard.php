@@ -1,20 +1,10 @@
 <?php
 
-require_once("include/db.php"); // Include the database connection file
-require_once("include/logout.php"); // Include the logout function
-
-session_start(); // Start the session
-$admin = $_SESSION['admin']; // Get the admin username from the session
-
-if (empty($admin)) { // If the admin username is empty
-    $_SESSION['url'] = $_SERVER['REQUEST_URI'];
-    $_SESSION["noadmin"] = true; // Set a flag to indicate that there is no admin
-    header("Location:login.php"); // Redirect to the login page
-}
-
-if (array_key_exists('logout', $_POST)) { // If the logout button is clicked
-    logout(); // Call the logout function
-}
+// Include necessary files
+require_once("include/db.php");
+require_once("include/logout.php");
+require_once("include/checkadmin.php"); 
+require_once("include/main.php"); 
 
 $sql_admin = "SELECT * FROM admins"; // Select all admins from the admins table
 $stmt = $ConnectingDB->query($sql_admin); // Execute the query
