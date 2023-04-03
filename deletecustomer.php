@@ -1,45 +1,36 @@
 <?php
 ini_set('display_errors', '1');
 
+// Include necessary files
 require_once("include/db.php");
 require_once("include/logout.php");
-
-session_start();
-$admin = $_SESSION['admin'];
-global $ConnectingDB;
-
-if (empty($admin)) {
-    $_SESSION['url'] = $_SERVER['REQUEST_URI'];
-    $_SESSION["noadmin"] = true;
-    header("Location:login.php");
-}
-
-if (array_key_exists('logout', $_POST)) {
-    logout();
-}
+require_once("include/checkadmin.php");
+require_once("include/main.php");
+require_once("include/checkcustomerid.php");
 
 $Success = false;
 $Failed = false;
 
-$customer_id = $_GET["customer_id"]; // retrieve the value of the "car_model" input field from the POST data
-if (empty($customer_id)) {
-    header("Location:managecustomer.php");
-}
-
+// query the database to retrieve the customer data using the customer ID
 $sql_customers = "SELECT * FROM customers WHERE CustomerID = '$customer_id'";
 $stmt = $ConnectingDB->query($sql_customers);
 
+// loop through the results and assign the values to variables
 while ($DataRows = $stmt->fetch()) {
     $customer_name = $DataRows["CustomerName"];
     $customer_email =  $DataRows["CustomerEmail"];
     $customer_no =  $DataRows["CustomerPhoneNumber"];
 }
 
+// check if the delete button was clicked
 if (isset($_POST["submit"])) {
+    // delete the customer record from the database
     $sql_delete = "DELETE FROM customers WHERE CustomerID = '$customer_id'";
     $Execute = $ConnectingDB->query($sql_delete);
+    // set the success flag to true
     $Success = true;
 }
+
 
 ?>
 
@@ -51,27 +42,11 @@ if (isset($_POST["submit"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="include/fontawesome-5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-        </symbol>
-        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-        </symbol>
-        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-        </symbol>
-    </svg>
 
     <title> Delete Customer </title>
 </head>
 
 <body>
-
     <nav class="">
         <div class="container">
             <a class="navbar-brand" href="#">Booking System</a>
@@ -113,21 +88,14 @@ if (isset($_POST["submit"])) {
 
     <form class="" action="deletecustomer.php?customer_id=<?php echo $customer_id ?>" method="post" enctype="multipart/form-data">
         <div id="success" class="" role="alert" style="display: none;">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-                <use xlink:href="#check-circle-fill" />
-            </svg>
             Successfully delete customer!!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
         <div id="failed" class="" role="alert" style="display: none;">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
-                <use xlink:href="#exclamation-triangle-fill" />
-            </svg>
             Fail to delete customer!!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-
 
         <label>
             <span class="FieldInfo">Customer ID: </span>
@@ -149,12 +117,12 @@ if (isset($_POST["submit"])) {
         </label>
         <input type="text" name="customer_phone_no" placeholder="Phone Number" value="<?php echo $customer_no ?>" readonly>
 
-
-        <button formaction="dashboard.php" class=""><i class="fas fa-arrow-left"></i>
-            Back to Dashboard</button>
         <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
 
     </form>
+
+    <a href="managecustomer.php"><button class=""><i class="fas fa-arrow-left"></i>
+            Back</button></a>
 
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";

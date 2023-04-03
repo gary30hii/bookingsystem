@@ -4,7 +4,7 @@
 require_once("include/db.php");
 require_once("include/logout.php");
 require_once("include/checkadmin.php");
-require_once("include/main.php"); 
+require_once("include/main.php");
 
 
 // Retrieve the car model from the POST data if it exists
@@ -148,64 +148,64 @@ if (isset($_POST["submit"])) { // Check if the form has been submitted
         </div>
     </nav>
 
-</html>
-
-<form class="" action="newbooking.php" method="post" enctype="multipart/form-data" onsubmit="return validateDates();">
-    <div id="success" class="" role="alert" style="display: none;">
-        Successfully add new booking !! Your reservation id: <?php echo $reservation_id ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div id="failed" class="" role="alert" style="display: none;">
-        Fail to add new booking !!
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <label for="car_model">Car Model: <?php echo $carmodel; ?></label>
-    <input type="hidden" name="car_model" value="<?php echo $carmodel; ?>">
-
-    <label>
-        <span class="FieldInfo">Customer ID: </span>
-    </label>
-    <input class="form-control" list="customerid" name="customer_id" required>
-    <datalist id="customerid">
-        <?php
-        $sql_customers = "SELECT * FROM customers";
-        $stmt = $ConnectingDB->query($sql_customers);
-
-        while ($DataRows = $stmt->fetch()) {
-            $customers_id = $DataRows["CustomerID"];
-            $customers_name = $DataRows["CustomerName"]; ?>
-            <option value=" <?php echo $customers_id ?>"><?php echo $customers_name ?></option>
-        <?php }
-        ?>
-    </datalist>
-
-    <label for="pickupdate">Pick Up Date:</label>
-    <input type="date" id="pickupdate" name="pick_up_date" required>
-
-    <label for="dropoffdate">Drop Off Date:</label>
-    <input type="date" id="dropoffdate" name="drop_off_date" required>
-
-    <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
-
-</form>
-<a href="selectcar.php"><button class=""><i class="fas fa-arrow-left"></i>
-        Back</button></a>
 
 
-<script type="text/javascript">
-    var success = "<?php echo $Success ?>";
-    var failed = "<?php echo $Failed ?>";
+    <form class="" action="newbooking.php" method="post" enctype="multipart/form-data" onsubmit="return validateDates();">
+        <div id="success" class="" role="alert" style="display: none;">
+            Successfully add new booking !! Your reservation id: <?php echo $reservation_id ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-    if (success == true) {
-        document.getElementById("success").style.display = "block";
-    }
-    if (failed == true) {
-        document.getElementById("failed").style.display = "block";
-    }
-</script>
-<script src="include/date.js"></script>
+        <div id="failed" class="" role="alert" style="display: none;">
+            Fail to add new booking !!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <label for="car_model">Car Model: <?php echo $carmodel; ?></label>
+        <input type="hidden" name="car_model" value="<?php echo $carmodel; ?>">
+
+        <label>
+            <span class="FieldInfo">Customer ID: </span>
+        </label>
+        <input class="form-control" list="customerid" name="customer_id" required>
+        <datalist id="customerid">
+            <?php
+            $sql_customers = "SELECT * FROM customers";
+            $stmt = $ConnectingDB->query($sql_customers);
+
+            while ($DataRows = $stmt->fetch()) {
+                $customers_id = $DataRows["CustomerID"];
+                $customers_name = $DataRows["CustomerName"]; ?>
+                <option value=" <?php echo $customers_id ?>"><?php echo $customers_name ?></option>
+            <?php }
+            ?>
+        </datalist>
+
+        <label for="pickupdate">Pick Up Date:</label>
+        <input type="date" id="pickupdate" name="pick_up_date" required>
+
+        <label for="dropoffdate">Drop Off Date:</label>
+        <input type="date" id="dropoffdate" name="drop_off_date" required>
+
+        <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
+
+    </form>
+    <a href="selectcar.php"><button class=""><i class="fas fa-arrow-left"></i>
+            Back</button></a>
+
+
+    <script type="text/javascript">
+        var success = "<?php echo $Success ?>";
+        var failed = "<?php echo $Failed ?>";
+
+        if (success == true) {
+            document.getElementById("success").style.display = "block";
+        }
+        if (failed == true) {
+            document.getElementById("failed").style.display = "block";
+        }
+    </script>
+    <script src="include/date.js"></script>
 
 </body>
 

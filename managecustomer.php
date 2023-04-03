@@ -1,32 +1,11 @@
 <?php
 ini_set('display_errors', '1');
 
+// Include necessary files
 require_once("include/db.php");
 require_once("include/logout.php");
-
-session_start();
-$admin = $_SESSION['admin'];
-
-if (empty($admin)) {
-    $_SESSION['url'] = $_SERVER['REQUEST_URI'];
-    $_SESSION["noadmin"] = true;
-    header("Location:login.php");
-}
-
-if (array_key_exists('logout', $_POST)) {
-    logout();
-}
-
-$sql_admin = "SELECT * FROM admins";
-$stmt = $ConnectingDB->query($sql_admin);
-
-while ($DataRows = $stmt->fetch()) {
-    if ($admin == $DataRows["Username"]) {
-        $admin_name = $DataRows["StaffName"];
-    }
-}
-
-
+require_once("include/checkadmin.php");
+require_once("include/main.php");
 
 ?>
 
@@ -39,11 +18,10 @@ while ($DataRows = $stmt->fetch()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title> Dashboard </title>
+    <title> Customers List </title>
 </head>
 
 <body>
-
     <nav class="">
         <div class="container">
             <a class="navbar-brand" href="#">Booking System</a>
@@ -89,21 +67,29 @@ while ($DataRows = $stmt->fetch()) {
     </form>
 
     <?php
-
+    // Check if 'name' parameter is present in the URL using HTTP GET method
     if (isset($_GET['name'])) {
         $Name =  $_GET['name'];
     } else {
         $Name = "";
     }
+
+    // Modify $Name variable to add '%' to the beginning and end, allowing for partial search
     $Name = "%" . $Name . "%";
+
+    // Construct SQL query to search for customer names that match $Name using LIKE operator
     $sql = "SELECT * 
-        FROM customers
-        WHERE CustomerName LIKE '$Name'
-        ";
+    FROM customers
+    WHERE CustomerName LIKE '$Name'
+    ";
+
+    // Execute the SQL query and retrieve the results
     $cus_stmt = $ConnectingDB->query($sql);
 
+    // Check if any matching records were found
     if ($cus_stmt->rowCount() > 0) {
     ?>
+        <!-- Display the matching records in a table -->
         <div class="container content-div" style="overflow-x:auto;">
             <table class="table table-striped table-hover table-bordered table-dark">
                 <thead>
@@ -118,6 +104,7 @@ while ($DataRows = $stmt->fetch()) {
                 </thead>
                 <tbody>
                     <?php
+                    // Loop through the matching records and display them in the table
                     while ($DataRows = $cus_stmt->fetch()) {
                     ?>
                         <tr>
@@ -126,9 +113,11 @@ while ($DataRows = $stmt->fetch()) {
                             <td><?php echo $DataRows["CustomerEmail"] ?></td>
                             <td><?php echo $DataRows["CustomerPhoneNumber"] ?></td>
                             <td>
+                                <!-- Create a link to edit the current customer record -->
                                 <a href="editcustomer.php?customer_id=<?php echo $DataRows["CustomerID"] ?>"><button type="submit" class="btn btn-outline-light w-100"> Update </button></a>
                             </td>
                             <td>
+                                <!-- Create a link to delete the current customer record -->
                                 <a href="deletecustomer.php?customer_id=<?php echo $DataRows["CustomerID"] ?>"><button type="submit" class="btn btn-outline-light w-100"> Delete </button></a>
                             </td>
                         </tr>
@@ -141,6 +130,7 @@ while ($DataRows = $stmt->fetch()) {
 
     <?php
     } else {
+        // If no matching records were found, display an error message
         echo "<h1>No record found</h1>";
     }
     ?>
