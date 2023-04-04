@@ -66,6 +66,8 @@ require_once("include/main.php");
         <button type="submit">Search</button>
     </form>
 
+    <a href="newcustomer.php"><button class="btn btn-outline-light w-100">New Customer</button></a>
+
     <?php
     // Check if 'name' parameter is present in the URL using HTTP GET method
     if (isset($_GET['name'])) {

@@ -98,7 +98,7 @@ while ($DataRows = $stmt->fetch()) { // Loop through the results
                         <a href="managecustomer.php"><button class="btn btn-outline-light w-100">Update Customer</button></a>
                     </div>
                     <div class="col">
-                        <a href="addnewadmin.php"><button class="btn btn-outline-light w-100">New Admin</button></a>
+                        <a href="newadmin.php"><button class="btn btn-outline-light w-100">New Admin</button></a>
                     </div>
                     <div class="col">
                         <a href="manageadmin.php"><button class="btn btn-outline-light w-100">Update Admin</button></a>

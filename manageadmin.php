@@ -1,27 +1,23 @@
 <?php
 ini_set('display_errors', '1');
 
+// include necessary PHP files
 require_once("include/db.php");
 require_once("include/logout.php");
+require_once("include/main.php");
 
+// start a session and retrieve the currently logged-in admin's username
 session_start();
 $admin = $_SESSION['admin'];
 
-if (empty($admin)) {
-    $_SESSION['url'] = $_SERVER['REQUEST_URI'];
-    $_SESSION["noadmin"] = true;
-    header("Location:login.php");
-}
-
-if (array_key_exists('logout', $_POST)) {
-    logout();
-}
-
+// retrieve all admin records from the database
 $sql_admin = "SELECT * FROM admins";
 $stmt = $ConnectingDB->query($sql_admin);
 
+// loop through the admin records to find the currently logged-in admin's details
 while ($DataRows = $stmt->fetch()) {
     if ($admin == $DataRows["Username"]) {
+        // if the currently logged-in admin's username matches the current record, retrieve their details
         $admin_name = $DataRows["StaffName"];
         $admin_position = $DataRows["Position"];
     }
@@ -38,7 +34,7 @@ while ($DataRows = $stmt->fetch()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title> Dashboard </title>
+    <title> Admin List </title>
 </head>
 
 <body>
@@ -87,34 +83,38 @@ while ($DataRows = $stmt->fetch()) {
         <button type="submit">Search</button>
     </form>
 
+    <!-- Display "New Admin" button if admin position is "Boss"  -->
     <?php if ($admin_position == "Boss") { ?>
         <a href="newadmin.php"><button class="btn btn-outline-light w-100"> New Admin </button></a>
     <?php } ?>
 
+    <!-- Display a message if user doesn't have access to the previous page -->
     <?php if (isset($_SESSION['noaccess']) && $_SESSION['noaccess'] == true) { ?>
-        <div id="success" class="alert alert-success alert-dismissible fade show" role="alert">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-                <use xlink:href="#check-circle-fill" />
-            </svg>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             You do not have access to the page...
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <?php unset($_SESSION["noaccess"]); ?>
         </div>
     <?php } ?>
 
     <?php
 
+    // Get admin username from the search form
     if (isset($_GET['username'])) {
         $Name =  $_GET['username'];
     } else {
         $Name = "";
     }
     $Name = "%" . $Name . "%";
+
+    // Construct a SQL query to search for admins based on username
     $sql = "SELECT * 
         FROM admins
         WHERE Username LIKE '$Name'
         ";
     $cus_stmt = $ConnectingDB->query($sql);
 
+    // Display a table of admins if any found, otherwise show "No record found" message
     if ($cus_stmt->rowCount() > 0) {
     ?>
         <div class="container content-div" style="overflow-x:auto;">

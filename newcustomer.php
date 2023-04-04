@@ -124,12 +124,12 @@ if (isset($_POST["publish"])) {
                 <label>
                     <span class="FieldInfo">Customer Email: </span>
                 </label>
-                <input type="text" name="customer_email" placeholder="Email">
+                <input type="email" id="email-input" name="customer_email" placeholder="Email">
 
                 <label>
-                    <span class="FieldInfo">Customer Phone: </span>
+                    <span class="FieldInfo">Customer Phone: (10-11 digit)</span>
                 </label>
-                <input type="text" name="customer_phone_no" placeholder="Phone Number">
+                <input type="tel" id="phone-input" name="customer_phone_no" placeholder="10-11 digit Phone Number" minlength="10" maxlength="11"  pattern="[0-9]+" required>
 
                 <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
 
@@ -140,8 +140,8 @@ if (isset($_POST["publish"])) {
         <a href="selectcar.php"><button class=""><i class="fas fa-arrow-left"></i>
                 New reservation</button></a>
     </div>
-    <a href="dashboard.php"><button class=""><i class="fas fa-arrow-left"></i>
-            Back to dashboard</button></a>
+    <a href="managecustomer.php"><button class=""><i class="fas fa-arrow-left"></i>
+            Back to customers list</button></a>
 
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";
@@ -155,6 +155,7 @@ if (isset($_POST["publish"])) {
             document.getElementById("failed").style.display = "block";
         }
     </script>
+
 </body>
 
 </html>

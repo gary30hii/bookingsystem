@@ -1,16 +1,19 @@
 <?php
 ini_set('display_errors', '1');
 
+// Require the database configuration file and start a session
 require_once("include/db.php");
 session_start();
 
 $Failed = false;
 $UserError = false;
 
+// Retrieve all admin data from the 'admins' table
 global $ConnectingDB;
 $sql = "SELECT StaffID, Username, Password, StaffName FROM admins";
 $stmt = $ConnectingDB->query($sql);
 
+// Loop through the result set and store the data in arrays
 while ($DataRows = $stmt->fetch()) {
     $id[] = $DataRows["StaffID"];
     $UserName[] = $DataRows["Username"];
@@ -20,28 +23,35 @@ while ($DataRows = $stmt->fetch()) {
 
 $User = null;
 
+// Check if a URL is set in the session, otherwise set it to 'dashboard.php'
 if (isset($_SESSION['url'])) {
     $url = $_SESSION['url'];
 } else {
     $url = "dashboard.php";
 }
 
+// Handle login form submission
 if (isset($_POST["publish"])) {
 
+    // Check if username and password are not empty
     if (!empty($_POST["username"]) && !empty($_POST["password"])) {
 
+        // Retrieve the entered username and password
         $Password = $_POST["password"];
         $Username = $_POST["username"];
 
+        // Check if the entered username exists in the database
         $chk = $ConnectingDB->prepare("SELECT Username FROM admins WHERE Username = :checkName");
         $chk->bindParam(':checkName', $Username);
         $chk->execute();
 
         if ($chk->rowCount() > 0) {
             $TruePassword = "";
+            // Loop through the admin data arrays to find the matching password
             for ($i = 0; $i < sizeof($id); $i++) {
                 if ($UserName[$i] == $Username) {
                     $TruePassword = $PassWord[$i];
+                    // Set the user variable to the admin name if available, otherwise to the username
                     if ($Name[$i] != "") {
                         $User = $Name[$i];
                     } else {
@@ -49,6 +59,7 @@ if (isset($_POST["publish"])) {
                     }
                 }
             }
+            // If the entered password matches the true password, log the user in
             if ($Password == $TruePassword) {
                 $Success = true;
                 $_SESSION['admin'] = $_POST["username"];
@@ -90,9 +101,6 @@ if (isset($_POST["publish"])) {
             </div>
 
             <div id="failed" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
-                    <use xlink:href="#exclamation-triangle-fill" />
-                </svg>
                 <?php
                 if (empty($_POST["username"]) && empty($_POST["password"])) {
                     echo "Please enter username and password correctly.";

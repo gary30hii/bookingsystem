@@ -127,12 +127,12 @@ if (isset($_POST["submit"])) {
         <label>
             <span class=" FieldInfo">Customer Email: </span>
         </label>
-        <input type="text" name="customer_email" placeholder="Email" value="<?php echo $customer_email ?>">
+        <input type="email" name="customer_email" placeholder="Email" value="<?php echo $customer_email ?>">
 
         <label>
-            <span class="FieldInfo">Customer Phone: </span>
+            <span class="FieldInfo">Customer Phone: (10-11 digit)</span>
         </label>
-        <input type="text" name="customer_phone_no" placeholder="Phone Number" value="<?php echo $customer_no ?>">
+        <input type="text" name="customer_phone_no" placeholder="10-11 digit Phone Number" minlength="10" maxlength="11" pattern="[0-9]+" value="<?php echo $customer_no ?>">
 
         <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
 

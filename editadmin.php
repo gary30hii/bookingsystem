@@ -1,62 +1,77 @@
 <?php
 ini_set('display_errors', '1');
 
+// Include necessary files
 require_once("include/db.php");
 require_once("include/logout.php");
+require_once("include/main.php");
 
+// start a session to keep track of the user's login status
 session_start();
+
+// retrieve the username of the current admin from the session
 $admin = $_SESSION['admin'];
+
+// query the database to retrieve the details of the current admin
 $sql_admin = "SELECT * FROM admins WHERE Username = '$admin'";
 $stmt = $ConnectingDB->query($sql_admin);
 
+// extract the staff ID and position of the current admin from the database results
 while ($DataRows = $stmt->fetch()) {
     $admin_id = $DataRows["StaffID"];
     $admin_position = $DataRows["Position"];
 }
 
-if (empty($admin)) {
-    $_SESSION['url'] = $_SERVER['REQUEST_URI'];
-    $_SESSION["noadmin"] = true;
-    header("Location:login.php");
-}
-
-if (array_key_exists('logout', $_POST)) {
-    logout();
-}
-
+// retrieve the staff ID of the admin to be managed from the URL parameters
 $staff_id = $_GET["admin_id"];
-if (empty($admin_id)) {
+
+// if the staff ID is not provided, redirect the user to the manageadmin page
+if (empty($_GET["admin_id"])) {
     header("Location:manageadmin.php");
 }
 
+// query the database to retrieve the details of the admin to be managed
 $sql_staff = "SELECT * FROM admins WHERE StaffID = '$staff_id'";
 $stmt = $ConnectingDB->query($sql_staff);
 
+// extract the details of the admin to be managed from the database results
 while ($DataRows = $stmt->fetch()) {
+
+    // check if the current admin has permission to manage the admin based on their position
     if ($admin_id == $staff_id || $admin_position == "Boss") {
         $staff_name = $DataRows["StaffName"];
         $staff_position = $DataRows["Position"];
         $staff_username = $DataRows["Username"];
     } else {
+        // if the current admin does not have permission to manage the admin, redirect them to the manageadmin page
         $_SESSION["noaccess"] = true;
         header("Location:manageadmin.php");
-
     }
 }
 
+// initialize variables to track the success or failure of the update operation
 $Success = false;
 $Failed = false;
 
+// check if the form was submitted
 if (isset($_POST["publish"])) {
+
+    // check if all required fields have been filled in
     if (!empty($_POST["admin_name"]) && !empty($_POST["username"]) && !empty($_POST["admin_position"])) {
 
+        // prepare an SQL statement to update the admin's details in the database
         $sql_update = "UPDATE admins SET StaffName = :staffName, Username = :username, Position = :position WHERE StaffID = :staffID";
-        $newData = array(':staffName' => $_POST["admin_name"], ':username' => $_POST["username"], ':position' => $_POST["admin_position"], ':staffID' => $admin_id);
+        $newData = array(':staffName' => $_POST["admin_name"], ':username' => $_POST["username"], ':position' => $_POST["admin_position"], ':staffID' => $staff_id);
         $stmt = $ConnectingDB->prepare($sql_update);
+
+        // execute the SQL statement with the new data
         $Execute = $stmt->execute($newData);
 
+        // set the Success variable to true to indicate that the update was successful
         $Success = true;
+
     } else {
+        // set the Failed variable to true to indicate that the update failed due to missing fields
         $Failed = true;
     }
 }
@@ -121,24 +136,18 @@ if (isset($_POST["publish"])) {
         </div>
     </div>
 
-    <form class="" action="editadmin.php?admin_id=<?php echo $admin_id ?>" method="post" enctype="multipart/form-data">
+    <form class="" action="editadmin.php?admin_id=<?php echo $staff_id ?>" method="post" enctype="multipart/form-data">
         <div class="container">
             <div class="header-div">
                 <p>Edit Admin </p>
             </div>
             <div class="">
                 <div id="success" class="" role="alert" style="display: none;">
-                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-                        <use xlink:href="#check-circle-fill" />
-                    </svg>
-                    Successfully delete admin !!
+                    Successfully edit admin infomation
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <div id="failed" class="" role="alert" style="display: none;">
-                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
-                        <use xlink:href="#exclamation-triangle-fill" />
-                    </svg>
                     Fail to delete admin !!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -146,23 +155,23 @@ if (isset($_POST["publish"])) {
                 <label>
                     <span class="FieldInfo">Staff ID: </span>
                 </label>
-                <input type="text" id="country" name="Staff_id" value="<?php echo $staff_id ?>" readonly>
+                <input type="text" id="country" name="Staff_id" value="<?php echo $staff_id ?>" readonly required>
 
                 <label>
                     <span class="FieldInfo">Admin Name: </span>
                 </label>
-                <input type="text" name="admin_name" placeholder="Name" value="<?php echo $staff_name ?>">
+                <input type="text" name="admin_name" placeholder="Name" value="<?php echo $staff_name ?>" required>
 
                 <label>
                     <span class="FieldInfo">Username: </span>
                 </label>
-                <input type="text" name="username" placeholder="Username" value="<?php echo $staff_username ?>">
+                <input type="text" name="username" placeholder="Username" value="<?php echo $staff_username ?>" required>
 
                 <label>
                     <span class="FieldInfo">Admin position: </span>
                 </label>
                 <?php if ($admin_position == "Boss") { ?>
-                    <input class="form-control" list="admin_position" name="admin_position" value="<?php echo $staff_position ?>">
+                    <input class="form-control" list="admin_position" name="admin_position" value="<?php echo $staff_position ?>" required>
                     <datalist id="admin_position">
                         <option value="Boss">Boss</option>
                         <option value="Supervisor">Supervisor</option>
@@ -173,23 +182,16 @@ if (isset($_POST["publish"])) {
                 <?php } ?>
 
                 <div class="">
-                    <div class="">
-                        <button formaction="dashboard.php" class="btn btn-outline-light w-100"><i class="fas fa-arrow-left"></i>
-                            Back To Dashboard</button>
-                    </div>
-                    <div class="">
-                        <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
-                    </div>
+                    <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
                 </div>
 
             </div>
         </div>
     </form>
 
-    <br>
+    <a href="manageadmin.php"><button class=""><i class="fas fa-arrow-left"></i>
+            Back</button></a>
 
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="include/main.js"></script>
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";
         var failed = "<?php echo $Failed ?>";
@@ -201,6 +203,7 @@ if (isset($_POST["publish"])) {
             document.getElementById("failed").style.display = "block";
         }
     </script>
+    
 </body>
 
 </html>

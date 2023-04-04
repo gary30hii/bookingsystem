@@ -1,61 +1,61 @@
 <?php
 ini_set('display_errors', '1');
 
+// Include necessary files
 require_once("include/db.php");
 require_once("include/logout.php");
+require_once("include/main.php");
 
-session_start();
-$admin = $_SESSION['admin'];
-
-if (empty($admin)) {
-    $_SESSION['url'] = $_SERVER['REQUEST_URI'];
-    $_SESSION["noadmin"] = true;
-    header("Location:login.php");
-}
-
-if (array_key_exists('logout', $_POST)) {
-    logout();
-}
-
+// Construct the SQL query to select all rows from the "admins" table
 $sql_admin = "SELECT * FROM admins";
+
+// Execute the SQL query and store the result in the $stmt variable
 $stmt = $ConnectingDB->query($sql_admin);
 
+// Iterate through each row of the result set
 while ($DataRows = $stmt->fetch()) {
+    // Check if the current row's "Username" column matches the $admin variable
     if ($admin == $DataRows["Username"]) {
+        // If there is a match, store the admin's name and position in variables
         $admin_name = $DataRows["StaffName"];
         $admin_position = $DataRows["Position"];
     }
+
+    // Check if the admin's position is not "Boss"
     if ($admin_position != "Boss") {
+        // If the admin's position is not "Boss", set a session variable to true and redirect the user
         $_SESSION["noaccess"] = true;
-        header("Location:manageadmin.php");
+        header("Location: manageadmin.php");
     }
 }
 
-$Success = false;
-$Failed = false;
 
-if (isset($_POST["publish"])) {
-    if (!empty($_POST["admin_name"]) && !empty($_POST["username"]) && !empty($_POST["admin_position"]) && !empty($_POST["password"]) && !empty($_POST["confirm_password"])) {
+$Success = false; // Set initial value for success flag
+$Failed = false; // Set initial value for failed flag
 
-        if ($_POST["password"] == $_POST["confirm_password"]) {
-            $sql = "INSERT INTO admins (StaffName, Username, Position, Password)";
-            $sql .= "VALUES(:staffName, :username, :position, :password)";
-            $stmt = $ConnectingDB->prepare($sql);
-            $stmt->bindValue(':staffName', $_POST["admin_name"]);
+if (isset($_POST["publish"])) { // Check if form has been submitted
+    if (!empty($_POST["admin_name"]) && !empty($_POST["username"]) && !empty($_POST["admin_position"]) && !empty($_POST["password"]) && !empty($_POST["confirm_password"])) { // Check if all required fields are not empty
+
+        if ($_POST["password"] == $_POST["confirm_password"]) { // Check if password and confirm password fields match
+            $sql = "INSERT INTO admins (StaffName, Username, Position, Password)"; // Define SQL query for inserting data into database
+            $sql .= "VALUES(:staffName, :username, :position, :password)"; // Add values for SQL query
+            $stmt = $ConnectingDB->prepare($sql); // Prepare SQL statement
+            $stmt->bindValue(':staffName', $_POST["admin_name"]); // Bind parameter values to the prepared statement
             $stmt->bindValue(':username', $_POST["username"]);
             $stmt->bindValue(':position', $_POST["admin_position"]);
             $stmt->bindValue(':password', $_POST["password"]);
 
-            $Execute = $stmt->execute();
+            $Execute = $stmt->execute(); // Execute the prepared statement
 
-            $Success = true;
-        }else{
-            $Failed = true;
+            $Success = true; // Set success flag to true
+        } else {
+            $Failed = true; // Set failed flag to true
         }
     } else {
-        $Failed = true;
+        $Failed = true; // Set failed flag to true
     }
 }
+
 
 ?>
 
@@ -67,23 +67,8 @@ if (isset($_POST["publish"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="include/fontawesome-5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
 
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-        </symbol>
-        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-        </symbol>
-        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-        </symbol>
-    </svg>
-
-    <title> Add New Customer</title>
+    <title> Add New Admin</title>
 </head>
 
 <body>
@@ -132,24 +117,18 @@ if (isset($_POST["publish"])) {
         </div>
     </div>
 
-    <form class="" action="newadmin.php" method="post" enctype="multipart/form-data">
+    <form class="" action="newadmin.php" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
         <div class="container">
             <div class="header-div">
                 <p>Add New Admin </p>
             </div>
             <div class="">
                 <div id="success" class="" role="alert" style="display: none;">
-                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-                        <use xlink:href="#check-circle-fill" />
-                    </svg>
                     Successfully add new admin !!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <div id="failed" class="" role="alert" style="display: none;">
-                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
-                        <use xlink:href="#exclamation-triangle-fill" />
-                    </svg>
                     Fail to add new admin !!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -157,17 +136,17 @@ if (isset($_POST["publish"])) {
                 <label>
                     <span class="FieldInfo">Admin Name: </span>
                 </label>
-                <input type="text" name="admin_name" placeholder="Name">
+                <input type="text" name="admin_name" placeholder="Name" required>
 
                 <label>
                     <span class="FieldInfo">Username: </span>
                 </label>
-                <input type="text" name="username" placeholder="Username">
+                <input type="text" name="username" placeholder="Username" required>
 
                 <label>
                     <span class="FieldInfo">Admin position: </span>
                 </label>
-                <input class="form-control" list="admin_position" name="admin_position">
+                <input class="form-control" list="admin_position" name="admin_position" required>
                 <datalist id="admin_position">
                     <option value="Boss">Boss</option>
                     <option value="Supervisor">Supervisor</option>
@@ -177,31 +156,24 @@ if (isset($_POST["publish"])) {
                 <label>
                     <span class="FieldInfo">Password: </span>
                 </label>
-                <input type="password" name="password" placeholder="Password">
+                <input type="password" id="password" name="password" placeholder="Password">
 
                 <label>
                     <span class="FieldInfo">Confirm Password: </span>
                 </label>
-                <input type="password" name="confirm_password" placeholder="Password">
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Password">
 
                 <div class="">
-                    <div class="">
-                        <button formaction="dashboard.php" class="btn btn-outline-light w-100"><i class="fas fa-arrow-left"></i>
-                            Back To Dashboard</button>
-                    </div>
-                    <div class="">
-                        <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
-                    </div>
+                    <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
                 </div>
 
             </div>
         </div>
     </form>
 
-    <br>
+    <a href="manageadmin.php"><button class=""><i class="fas fa-arrow-left"></i>
+            Back</button></a>
 
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="include/main.js"></script>
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";
         var failed = "<?php echo $Failed ?>";
@@ -213,6 +185,9 @@ if (isset($_POST["publish"])) {
             document.getElementById("failed").style.display = "block";
         }
     </script>
+    <script src="include/newpassword.js"></script>
+
 </body>
+
 
 </html>
