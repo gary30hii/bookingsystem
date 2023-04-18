@@ -4,12 +4,20 @@ ini_set('display_errors', '1');
 // Include necessary files
 require_once("include/db.php");
 require_once("include/logout.php");
-require_once("include/checkadmin.php"); 
-require_once("include/checkreservationid.php"); 
-require_once("include/main.php"); 
+require_once("include/checkadmin.php");
+require_once("include/checkreservationid.php");
+require_once("include/main.php");
 
 $Success = false;
 $Failed = false;
+
+// Current reservation details
+$sql_original_reservation = "SELECT * FROM reservations WHERE ReservationID = '$reservation_id'";
+$stmt = $ConnectingDB->query($sql_original_reservation);
+while ($DataRows = $stmt->fetch()) {
+    $carmodel = $DataRows["CarID"];
+    $customers_id = $DataRows["CustomerID"];
+}
 
 // Check if car model was submitted in POST request
 if (isset($_POST["car_model"])) {
@@ -101,14 +109,14 @@ if (isset($_POST["submit"])) { // check if the submit button was clicked
     <link rel="stylesheet" href="css/style.css">
     <script src="https://kit.fontawesome.com/78d9acbca6.js" crossorigin="anonymous"></script>
 
-    <title> Edit Booking  </title>
+    <title> Edit Booking </title>
 </head>
 
 <body>
 
     <nav class="">
         <div class="container">
-            
+
             <div class="navbar-brand">
                 <a href="#" id="Booking_System">Booking System</a>
             </div>
@@ -151,12 +159,12 @@ if (isset($_POST["submit"])) { // check if the submit button was clicked
         <form class="" action="editbooking.php?reservation_id=<?php echo $reservation_id ?>" method="post" enctype="multipart/form-data" onsubmit="return validateDates();">
             <div id="success" class="" role="alert" style="display: none;">
                 Successfully edit booking !!
-                
+
             </div>
 
             <div id="failed" class="" role="alert" style="display: none;">
                 Fail to edit booking !!
-                
+
             </div>
 
             <label>
