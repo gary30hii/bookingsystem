@@ -1,0 +1,320 @@
+body {
+    background-color: #0B0C10;
+    margin-left: 200px;
+
+}
+
+a {
+    color: #C5C6C7;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-decoration: none;
+}
+
+text {
+    color: #C5C6C7;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    
+}
+
+.main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    color: #49c5b6;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+
+
+
+
+
+/* nav sidebar */
+nav {
+  position: fixed; 
+  top: 0; 
+  left: 0;
+  height: 100vh;
+  width: 200px;
+  background-color: #1F2833;
+  z-index: 1; 
+  overflow-y: auto;
+}
+
+nav .navbar-brand {
+
+  width: 200px;
+  height: 30px;
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #49c5b6;
+  margin: 0;
+}
+
+nav .nav-item {
+  margin: 0; 
+}
+
+nav .nav-link {
+  display: block; 
+  padding: 0.5rem 1rem;
+  color: #C5C6C7;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+nav .nav-link:hover {
+  background-color: gray;
+}
+
+nav .btn {
+  width: 100%; 
+  margin: 0;
+  border-radius: 0;
+}
+
+nav .btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  border-radius: 8px;
+  color: #C5C6C7;
+  width: 166px;
+  margin: auto;
+  margin-top: 10px;
+}
+
+nav .btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+nav ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+}
+
+#Booking_System {
+
+    text-align: center;
+    font-weight: bold;
+    color: #49c5b6;
+    font-size: larger;
+}
+
+
+
+
+
+
+
+/* top bar */
+.topbar {
+    background-color: #49c5b6;
+
+    align-items: center;
+    width: 100%;
+    text-align: center;
+}
+
+.title {
+    font-size: 30px;
+    height: 50px;
+    display: block;
+    font-weight: bold;
+    color: #1F2833;
+    margin: 0%;
+    height: fit-content;
+
+}
+
+#welcomediv {
+    text-align: center;
+}
+#welcome {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #f2f2f2;
+    
+}
+
+.topbar_1 {
+    width: 100%;
+    padding-left: 0.5rem;
+    padding-bottom: 0.5rem;
+    text-align: center;
+
+}
+
+.topbar_2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    
+}
+
+
+
+
+button {
+  background-color: #49c5b6;
+  color: #fff;
+  font-size: 16px;
+
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+button:hover {
+  color: #1F2833;
+}
+
+button:active {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* table */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem auto;
+    font-size: 0.9rem;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #C5C6C7;
+    padding: 1rem;
+    border-radius: 10px;
+  
+}
+
+th,td {
+  padding: 0.5rem;
+  border: 1px solid #49c5b6;
+  
+}
+
+th {
+  background-color: #1f2833;
+  font-weight: bold;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #343c47;
+}
+
+tr:hover {
+    transition: background-color 0.1s ease-in-out;
+    background-color: #505b69;
+}
+
+table button {
+    transition: color 0.3s ease;
+    border-radius: 5px;
+}
+
+table #update {
+    background-color: #49c5b6;
+    border-color: #49c5b6;
+} 
+
+table #update:hover {
+    color: #1F2833;
+}
+
+table #cancel {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: rgb(233, 232, 232);
+}
+
+table #cancel:hover {
+    color: #1F2833;
+}
+
+table #changePw {
+    background-color: gold;
+    border-color: gold;
+    color: #1F2833;
+}
+
+table #changePw:hover {
+    color: white;
+}
+
+
+
+
+/* form */
+input{
+  padding: 5px;
+  border-radius: 5px;
+  border: 3px solid #1F2833;
+  background-color: gray;
+  width:100%;
+  box-sizing: border-box;
+  color: #0B0C10;
+}
+
+::placeholder {
+    color:#5f6368;
+}
+
+label {
+
+  display: block;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  color: #49c5b6;
+}
+
+.main button {
+    margin-left: 0%;
+}
+
+#success {
+    background-color: #49c5b6;
+    color: #f2f2f2;
+    width: fit-content;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+#failed {
+    background-color: #dc3545;
+    color: #f2f2f2;
+    width: fit-content;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+.header {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+
+
+/* CSS HEX */
+/* --poppy: #d64045ff;
+--mint-green: #e9fff9ff;
+--non-photo-blue: #9ed8dbff;
+--ucla-blue: #467599ff;
+--delft-blue: #1d3354ff; */

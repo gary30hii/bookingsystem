@@ -1,0 +1,182 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body
+{
+  background: #0B0C10;
+  justify-content: center;
+}
+
+.wrapper
+{
+  width: 70%;
+  background: #1F2833;
+  border-radius: 10px;
+  border-color: #49C5B6;
+  box-shadow: 0 10px 40px #49C5B6;
+  margin: auto;
+  margin-top: 2%;
+  align-items: center;
+}
+
+.wrapper header
+{
+  display: flex;
+  align-items: center;
+  padding: 25px 30px 10px;
+  justify-content: space-between;
+
+}
+
+header .icons
+{
+  display: flex;
+}
+
+header .icons span
+{
+  height: 38px;
+  width: 38px;
+  margin: 0 1px;
+  cursor: pointer;
+  color: #878787;
+  text-align: center;
+  line-height: 38px;
+  font-size: 1.9rem;
+  user-select: none;
+  border-radius: 50%;
+}
+
+.icons span:last-child
+{
+  margin-right: -10px;
+}
+
+/*hover over left right arrow*/
+header .icons span:hover
+{
+  background: #f2f2f2;
+}
+
+/*controls length of calendar*/
+.calendar
+{
+  padding: 30px;
+}
+
+.calendar ul
+{
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  text-align: center;
+}
+
+.calendar li
+{
+  color: white;
+  width: calc(100% / 7);
+  font-size: 1.07rem;
+}
+
+/*affects all days*/
+.calendar .days li
+{
+  z-index: 1;
+  text-align: center;
+  background-color: rgb(91, 103, 114);
+  color: white;
+  border: solid;
+  border-color: white;
+  height:30px; 
+  max-height:30px;
+  vertical-align: middle;
+  margin-bottom: 50px;
+}
+
+/*affects days from previous month*/
+.days li.inactive
+{
+  color: white;
+  background-color: #fff;
+}
+
+.navtop 
+{
+    background-color: #49C5B6;
+    width: 100%;
+}
+
+.navtop div 
+{
+    display: flex;   
+}
+
+/*car reservation*/
+.navtop div h1 
+{
+    display: inline-flex;
+    align-items: center;   
+    flex: 1;
+    font-size: 24px;
+    padding: 0;
+    margin-left: 2%;
+    color: white;
+    font-weight: normal;
+}
+
+.event
+{
+  background-color:slategray;
+  border-top: solid;
+  opacity: 0.6;
+}
+
+.navtop div h2
+{
+    margin-top: 1%;
+    margin-right: 1%;
+    margin-bottom: 1%;
+}
+
+form
+{
+    color: #f2f2f2;
+    margin-top: 1%;
+    margin-right: 4%;
+    margin-bottom: 1%;
+}
+
+.current-date , .carname{
+    color: white;
+}
+
+button {
+  background-color: #49c5b6;
+  color: #fff;
+  font-size: 16px;
+  border-color: #0B0C10;
+  padding: 10px 20px;
+  border-radius: 5px;
+
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+button:hover {
+  color: #1F2833;
+}
+
+button:active {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
+}
+
+
+
+

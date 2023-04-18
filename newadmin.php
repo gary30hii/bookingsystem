@@ -68,38 +68,42 @@ if (isset($_POST["publish"])) { // Check if form has been submitted
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/78d9acbca6.js" crossorigin="anonymous"></script>
+
     <title> Add New Admin</title>
 </head>
 
 <body>
     <nav class="">
         <div class="container">
-            <a class="navbar-brand" href="#">Booking System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            
+            <div class="navbar-brand">
+                <a href="#" id="Booking_System">Booking System</a>
+            </div>
+
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php">Home</a>
+                        <a class="nav-link" href="dashboard.php"><i class="fa-solid fa-house"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="checkavailability.php">Check Availability</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Edit Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Cancel Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="managecustomer.php">Manage Customer</a>
+                        <a class="nav-link" href="checkavailability.php"><i class="fa-solid fa-table-list"></i> Check Availability</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="manageadmin.php">Manage Admin</a>
+                        <a class="nav-link" href="newcustomerbooking.php"><i class="fa-solid fa-plus"></i> New Booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-pen"></i> Edit Booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-xmark"></i> Cancel Booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="managecustomer.php"><i class="fa-solid fa-list-check"></i> Manage Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manageadmin.php"><i class="fa-solid fa-people-roof"></i> Manage Admin</a>
                     </li>
                     <li class="nav-item">
                         <form method="post">
@@ -111,68 +115,73 @@ if (isset($_POST["publish"])) { // Check if form has been submitted
         </div>
     </nav>
 
-    <div class="container-fluid top-heading">
-        <div class="container">
-            Manage Admin
+
+    <div class="topbar">
+        <div class="topbar_1">
+            <p class="title">Manage Admin</p>
         </div>
     </div>
 
-    <form class="" action="newadmin.php" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-        <div class="container">
-            <div class="header-div">
-                <p>Add New Admin </p>
-            </div>
-            <div class="">
-                <div id="success" class="" role="alert" style="display: none;">
-                    Successfully add new admin !!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="main">
+
+        <form class="" action="newadmin.php" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <div class="container">
+                <div class="header">
+                    <p>Add New Admin </p>
                 </div>
-
-                <div id="failed" class="" role="alert" style="display: none;">
-                    Fail to add new admin !!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-
-                <label>
-                    <span class="FieldInfo">Admin Name: </span>
-                </label>
-                <input type="text" name="admin_name" placeholder="Name" required>
-
-                <label>
-                    <span class="FieldInfo">Username: </span>
-                </label>
-                <input type="text" name="username" placeholder="Username" required>
-
-                <label>
-                    <span class="FieldInfo">Admin position: </span>
-                </label>
-                <input class="form-control" list="admin_position" name="admin_position" required>
-                <datalist id="admin_position">
-                    <option value="Boss">Boss</option>
-                    <option value="Supervisor">Supervisor</option>
-                    <option value="Staff">Staff</option>
-                </datalist>
-
-                <label>
-                    <span class="FieldInfo">Password: </span>
-                </label>
-                <input type="password" id="password" name="password" placeholder="Password">
-
-                <label>
-                    <span class="FieldInfo">Confirm Password: </span>
-                </label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Password">
-
                 <div class="">
-                    <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
+                    <div id="success" class="" role="alert" style="display: none;">
+                        Successfully add new admin !!
+                        
+                    </div>
+
+                    <div id="failed" class="" role="alert" style="display: none;">
+                        Fail to add new admin !!
+                        
+                    </div>
+
+                    <label>
+                        <span class="FieldInfo">Admin Name: </span>
+                    </label>
+                    <input type="text" name="admin_name" placeholder="Name" required>
+
+                    <label>
+                        <span class="FieldInfo">Username: </span>
+                    </label>
+                    <input type="text" name="username" placeholder="Username" required>
+
+                    <label>
+                        <span class="FieldInfo">Admin position: </span>
+                    </label>
+                    <input class="form-control" list="admin_position" name="admin_position" required>
+                    <datalist id="admin_position">
+                        <option value="Boss">Boss</option>
+                        <option value="Supervisor">Supervisor</option>
+                        <option value="Staff">Staff</option>
+                    </datalist>
+
+                    <label>
+                        <span class="FieldInfo">Password: </span>
+                    </label>
+                    <input type="password" id="password" name="password" placeholder="Password">
+
+                    <label>
+                        <span class="FieldInfo">Confirm Password: </span>
+                    </label>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Password">
+
+                    <div class="">
+                        <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
+                    </div>
+
                 </div>
-
             </div>
-        </div>
-    </form>
+        </form>
 
-    <a href="manageadmin.php"><button class=""><i class="fas fa-arrow-left"></i>
-            Back</button></a>
+        <a href="manageadmin.php"><button class=""><i class="fas fa-arrow-left"></i>
+                Back</button></a>
+
+    </div>
 
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";

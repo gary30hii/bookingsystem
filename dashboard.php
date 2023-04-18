@@ -27,6 +27,9 @@ while ($DataRows = $stmt->fetch()) { // Loop through the results
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/78d9acbca6.js" crossorigin="anonymous"></script>
+
     <title> Dashboard </title>
 </head>
 
@@ -34,32 +37,33 @@ while ($DataRows = $stmt->fetch()) { // Loop through the results
 
     <nav class="">
         <div class="container">
-            <a class="navbar-brand" href="#">Booking System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            
+            <div class="navbar-brand">
+                <a href="#" id="Booking_System">Booking System</a>
+            </div>
+
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php">Home</a>
+                        <a class="nav-link" href="dashboard.php"><i class="fa-solid fa-house"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="checkavailability.php">Check Availability</a>
+                        <a class="nav-link" href="checkavailability.php"><i class="fa-solid fa-table-list"></i> Check Availability</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
+                        <a class="nav-link" href="newcustomerbooking.php"><i class="fa-solid fa-plus"></i> New Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Edit Booking</a>
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-pen"></i> Edit Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Cancel Booking</a>
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-xmark"></i> Cancel Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="managecustomer.php">Manage Customer</a>
+                        <a class="nav-link" href="managecustomer.php"><i class="fa-solid fa-list-check"></i> Manage Customer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="manageadmin.php">Manage Admin</a>
+                        <a class="nav-link" href="manageadmin.php"><i class="fa-solid fa-people-roof"></i> Manage Admin</a>
                     </li>
                     <li class="nav-item">
                         <form method="post">
@@ -71,44 +75,43 @@ while ($DataRows = $stmt->fetch()) { // Loop through the results
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <div class="container">
-            <a href="#" style="color: white; text-decoration: none;"><i class="fas fa-blog"></i>Dashboard</a>
+    <div class="topbar">
+        <div class="topbar_1">
+            <a href="#" class="title">Dashboard</a>
+
             <?php if (!empty($_SESSION['firstlogin'])) { ?>
-                <div id="success" class="alert alert-success alert-dismissible fade show" role="alert">
-                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-                        <use xlink:href="#check-circle-fill" />
-                    </svg>
-                    <?php echo "Welcome back, " . $admin_name . " !!" ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div id="welcomediv" role="alert">
+                    
+                    <?php echo "<a id='welcome'>Welcome back, " . $admin_name . " !!</a>" ?>
+                    
                 </div>
             <?php } ?>
-            <div class="container">
-                <div class="">
-                    <div class="col">
-                        <a href="newcustomerbooking.php"><button class="btn btn-outline-light w-100">New Booking</button></a>
-                    </div>
-                    <div class="col">
-                        <a href="updatebooking.php"><button class="btn btn-outline-light w-100">Update Booking</button></a>
-                    </div>
-                    <div class="col">
-                        <a href="newcustomer.php"><button class="btn btn-outline-light w-100">New Customer</button></a>
-                    </div>
-                    <div class="col">
-                        <a href="managecustomer.php"><button class="btn btn-outline-light w-100">Update Customer</button></a>
-                    </div>
-                    <div class="col">
-                        <a href="newadmin.php"><button class="btn btn-outline-light w-100">New Admin</button></a>
-                    </div>
-                    <div class="col">
-                        <a href="manageadmin.php"><button class="btn btn-outline-light w-100">Update Admin</button></a>
-                    </div>
-                    <div class="col">
-                        <a href="checkavailability.php"><button class="btn btn-outline-light w-100">Check Availability</button></a>
-                    </div>
-                </div>
-            </div>
+            
         </div>
+    </div>
+
+    <div class="topbar_2">
+                    <div class="col">
+                        <a href="newcustomerbooking.php"><button class="btn btn-outline-light w-100">New Booking <i class="fa-solid fa-plus"></i></button></a>
+                    </div>
+                    <div class="col">
+                        <a href="updatebooking.php"><button class="btn btn-outline-light w-100">Update Booking <i class="fa-solid fa-pen"></i></button></a>
+                    </div>
+                    <div class="col">
+                        <a href="newcustomer.php"><button class="btn btn-outline-light w-100">New Customer <i class="fa-solid fa-person"></i></button></a>
+                    </div>
+                    <div class="col">
+                        <a href="managecustomer.php"><button class="btn btn-outline-light w-100">Update Customer <i class="fa-solid fa-pen"></i></button></a>
+                    </div>
+                    <div class="col">
+                        <a href="newadmin.php"><button class="btn btn-outline-light w-100">New Admin <i class="fa-solid fa-user"></i></button></a>
+                    </div>
+                    <div class="col">
+                        <a href="manageadmin.php"><button class="btn btn-outline-light w-100">Update Admin <i class="fa-solid fa-pen"></i></button></a>
+                    </div>
+                    <div class="col">
+                        <a href="checkavailability.php"><button class="btn btn-outline-light w-100">Check Availability <i class="fa-solid fa-table-list"></i></button></a>
+                    </div>
     </div>
 
 </body>

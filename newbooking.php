@@ -105,38 +105,42 @@ if (isset($_POST["submit"])) { // Check if the form has been submitted
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/78d9acbca6.js" crossorigin="anonymous"></script>
+
     <title> New Reservation </title>
 </head>
 
 <body>
     <nav class="">
         <div class="container">
-            <a class="navbar-brand" href="#">Booking System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            
+            <div class="navbar-brand">
+                <a href="#" id="Booking_System">Booking System</a>
+            </div>
+
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php">Home</a>
+                        <a class="nav-link" href="dashboard.php"><i class="fa-solid fa-house"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="checkavailability.php">Check Availability</a>
+                        <a class="nav-link" href="checkavailability.php"><i class="fa-solid fa-table-list"></i> Check Availability</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
+                        <a class="nav-link" href="newcustomerbooking.php"><i class="fa-solid fa-plus"></i> New Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Edit Booking</a>
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-pen"></i> Edit Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Cancel Booking</a>
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-xmark"></i> Cancel Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="managecustomer.php">Manage Customer</a>
+                        <a class="nav-link" href="managecustomer.php"><i class="fa-solid fa-list-check"></i> Manage Customer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="manageadmin.php">Manage Admin</a>
+                        <a class="nav-link" href="manageadmin.php"><i class="fa-solid fa-people-roof"></i> Manage Admin</a>
                     </li>
                     <li class="nav-item">
                         <form method="post">
@@ -149,49 +153,52 @@ if (isset($_POST["submit"])) { // Check if the form has been submitted
     </nav>
 
 
+    <div class="main">
 
-    <form class="" action="newbooking.php" method="post" enctype="multipart/form-data" onsubmit="return validateDates();">
-        <div id="success" class="" role="alert" style="display: none;">
-            Successfully add new booking !! Your reservation id: <?php echo $reservation_id ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        <form class="" action="newbooking.php" method="post" enctype="multipart/form-data" onsubmit="return validateDates();">
+            <div id="success" class="" role="alert" style="display: none;">
+                Successfully add new booking !! Your reservation id: <?php echo $reservation_id ?>
+                
+            </div>
 
-        <div id="failed" class="" role="alert" style="display: none;">
-            Fail to add new booking !!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+            <div id="failed" class="" role="alert" style="display: none;">
+                Fail to add new booking !!
+                
+            </div>
 
-        <label for="car_model">Car Model: <?php echo $carmodel; ?></label>
-        <input type="hidden" name="car_model" value="<?php echo $carmodel; ?>">
+            <label for="car_model">Car Model: <?php echo $carmodel; ?></label>
+            <input type="hidden" name="car_model" value="<?php echo $carmodel; ?>">
 
-        <label>
-            <span class="FieldInfo">Customer ID: </span>
-        </label>
-        <input class="form-control" list="customerid" name="customer_id" required>
-        <datalist id="customerid">
-            <?php
-            $sql_customers = "SELECT * FROM customers";
-            $stmt = $ConnectingDB->query($sql_customers);
+            <label>
+                <span class="FieldInfo">Customer ID: </span>
+            </label>
+            <input class="form-control" list="customerid" name="customer_id" required>
+            <datalist id="customerid">
+                <?php
+                $sql_customers = "SELECT * FROM customers";
+                $stmt = $ConnectingDB->query($sql_customers);
 
-            while ($DataRows = $stmt->fetch()) {
-                $customers_id = $DataRows["CustomerID"];
-                $customers_name = $DataRows["CustomerName"]; ?>
-                <option value=" <?php echo $customers_id ?>"><?php echo $customers_name ?></option>
-            <?php }
-            ?>
-        </datalist>
+                while ($DataRows = $stmt->fetch()) {
+                    $customers_id = $DataRows["CustomerID"];
+                    $customers_name = $DataRows["CustomerName"]; ?>
+                    <option value=" <?php echo $customers_id ?>"><?php echo $customers_name ?></option>
+                <?php }
+                ?>
+            </datalist>
 
-        <label for="pickupdate">Pick Up Date:</label>
-        <input type="date" id="pickupdate" name="pick_up_date" required>
+            <label for="pickupdate">Pick Up Date:</label>
+            <input type="date" id="pickupdate" name="pick_up_date" required>
 
-        <label for="dropoffdate">Drop Off Date:</label>
-        <input type="date" id="dropoffdate" name="drop_off_date" required>
+            <label for="dropoffdate">Drop Off Date:</label>
+            <input type="date" id="dropoffdate" name="drop_off_date" required>
 
-        <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
+            <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
 
-    </form>
-    <a href="selectcar.php"><button class=""><i class="fas fa-arrow-left"></i>
-            Back</button></a>
+        </form>
+        <a href="selectcar.php"><button class=""><i class="fas fa-arrow-left"></i>
+                Back</button></a>
+
+    </div>
 
 
     <script type="text/javascript">

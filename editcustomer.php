@@ -59,6 +59,9 @@ if (isset($_POST["submit"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/78d9acbca6.js" crossorigin="anonymous"></script>
+
     <title> Edit Customer's Details </title>
 </head>
 
@@ -66,32 +69,33 @@ if (isset($_POST["submit"])) {
 
     <nav class="">
         <div class="container">
-            <a class="navbar-brand" href="#">Booking System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            
+            <div class="navbar-brand">
+                <a href="#" id="Booking_System">Booking System</a>
+            </div>
+
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php">Home</a>
+                        <a class="nav-link" href="dashboard.php"><i class="fa-solid fa-house"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="checkavailability.php">Check Availability</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Edit Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Cancel Booking</a>
+                        <a class="nav-link" href="checkavailability.php"><i class="fa-solid fa-table-list"></i> Check Availability</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="managecustomer.php">Manage Customer</a>
+                        <a class="nav-link" href="newcustomerbooking.php"><i class="fa-solid fa-plus"></i> New Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="manageadmin.php">Manage Admin</a>
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-pen"></i> Edit Booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-xmark"></i> Cancel Booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="managecustomer.php"><i class="fa-solid fa-list-check"></i> Manage Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manageadmin.php"><i class="fa-solid fa-people-roof"></i> Manage Admin</a>
                     </li>
                     <li class="nav-item">
                         <form method="post">
@@ -103,43 +107,46 @@ if (isset($_POST["submit"])) {
         </div>
     </nav>
 
-    <form class="" action="editcustomer.php?customer_id=<?php echo $customer_id ?>" method="post" enctype="multipart/form-data">
-        <div id="success" class="" role="alert" style="display: none;">
-            Successfully edit customer's details !!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    <div class="main">
 
-        <div id="failed" class="" role="alert" style="display: none;">
-            Fail to edit customer's details !!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        <form class="" action="editcustomer.php?customer_id=<?php echo $customer_id ?>" method="post" enctype="multipart/form-data">
+            <div id="success" class="" role="alert" style="display: none;">
+                Successfully edit customer's details !!
+                
+            </div>
 
-        <label>
-            <span class="FieldInfo">Customer ID: </span>
-        </label>
-        <input type="text" id="country" name="customer_id" value="<?php echo $customer_id ?>" readonly>
+            <div id="failed" class="" role="alert" style="display: none;">
+                Fail to edit customer's details !!
+                
+            </div>
 
-        <label>
-            <span class=" FieldInfo">Customer Name: </span>
-        </label>
-        <input type="text" name="customer_name" placeholder="Name" value="<?php echo $customer_name ?>">
+            <label>
+                <span class="FieldInfo">Customer ID: </span>
+            </label>
+            <input type="text" id="country" name="customer_id" value="<?php echo $customer_id ?>" readonly>
 
-        <label>
-            <span class=" FieldInfo">Customer Email: </span>
-        </label>
-        <input type="email" name="customer_email" placeholder="Email" value="<?php echo $customer_email ?>">
+            <label>
+                <span class=" FieldInfo">Customer Name: </span>
+            </label>
+            <input type="text" name="customer_name" placeholder="Name" value="<?php echo $customer_name ?>">
 
-        <label>
-            <span class="FieldInfo">Customer Phone: (10-11 digit)</span>
-        </label>
-        <input type="text" name="customer_phone_no" placeholder="10-11 digit Phone Number" minlength="10" maxlength="11" pattern="[0-9]+" value="<?php echo $customer_no ?>">
+            <label>
+                <span class=" FieldInfo">Customer Email: </span>
+            </label>
+            <input type="email" name="customer_email" placeholder="Email" value="<?php echo $customer_email ?>">
 
-        <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
+            <label>
+                <span class="FieldInfo">Customer Phone: (10-11 digit)</span>
+            </label>
+            <input type="text" name="customer_phone_no" placeholder="10-11 digit Phone Number" minlength="10" maxlength="11" pattern="[0-9]+" value="<?php echo $customer_no ?>">
 
-    </form>
+            <button class="" name="submit"><i class="fas fa-check"></i>submit</button>
 
-    <a href="managecustomer.php"><button class=""><i class="fas fa-arrow-left"></i>
-            Back</button></a>
+        </form>
+
+        <a href="managecustomer.php"><button class=""><i class="fas fa-arrow-left"></i>
+                Back</button></a>
+    </div>
 
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";

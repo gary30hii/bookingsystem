@@ -89,18 +89,20 @@ if (isset($_POST["publish"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <link rel="stylesheet" href="css/loginpage.css">
+
     <title> Log in </title>
 </head>
 
 <body>
 
     <form class="" action="login.php" method="post" enctype="multipart/form-data">
-        <div class="">
-            <div class="">
-                <p>Login</p>
+        <div class="login-container">
+            <div class="top">
+                <h2>Login</h2>
             </div>
 
-            <div id="failed" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+            <div id="failed" class="alert" role="alert" style="display: none;">
                 <?php
                 if (empty($_POST["username"]) && empty($_POST["password"])) {
                     echo "Please enter username and password correctly.";
@@ -110,24 +112,21 @@ if (isset($_POST["publish"])) {
                 ?>
             </div>
 
-            <div id="user-error" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
-                    <use xlink:href="#exclamation-triangle-fill" />
-                </svg>
+            <div id="user-error" class="alert" role="alert" style="display: none;">
                 <?php echo $message ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                
             </div>
 
-            <div class="">
+            <div class="form-group-1">
                 <label for="floatingInput">Username</label>
-                <input type="text" name="username" class="form-control" id="floatingInput" placeholder="">
+                <input type="text" name="username" placeholder="">
             </div>
-            <div class="">
+            <div class="form-group-2">
                 <label for="floatingPassword">Password</label>
-                <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="">
+                <input type="password" name="password" placeholder="">
             </div>
 
-            <div class="">
+            <div class="button-div">
                 <button type="submit" class="" name="publish">Log In</button>
             </div>
         </div>

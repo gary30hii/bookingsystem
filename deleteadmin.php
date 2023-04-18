@@ -79,38 +79,42 @@ if (isset($_POST["publish"])) { // check if the 'publish' button was clicked
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/78d9acbca6.js" crossorigin="anonymous"></script>
+
     <title> Delete Admin </title>
 </head>
 
 <body>
     <nav class="">
         <div class="container">
-            <a class="navbar-brand" href="#">Booking System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            
+            <div class="navbar-brand">
+                <a href="#" id="Booking_System">Booking System</a>
+            </div>
+
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php">Home</a>
+                        <a class="nav-link" href="dashboard.php"><i class="fa-solid fa-house"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="checkavailability.php">Check Availability</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="newcustomerbooking.php">New Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Edit Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php">Cancel Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="managecustomer.php">Manage Customer</a>
+                        <a class="nav-link" href="checkavailability.php"><i class="fa-solid fa-table-list"></i> Check Availability</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="manageadmin.php">Manage Admin</a>
+                        <a class="nav-link" href="newcustomerbooking.php"><i class="fa-solid fa-plus"></i> New Booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-pen"></i> Edit Booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-xmark"></i> Cancel Booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="managecustomer.php"><i class="fa-solid fa-list-check"></i> Manage Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manageadmin.php"><i class="fa-solid fa-people-roof"></i> Manage Admin</a>
                     </li>
                     <li class="nav-item">
                         <form method="post">
@@ -122,56 +126,60 @@ if (isset($_POST["publish"])) { // check if the 'publish' button was clicked
         </div>
     </nav>
 
-    <div class="container-fluid top-heading">
-        <div class="container">
-            Manage Admin
+    <div class="topbar">
+        <div class="topbar_1">
+            <p class="title">Manage Admin</p>
         </div>
     </div>
 
-    <form class="" action="deleteadmin.php?admin_id=<?php echo $staff_id ?>" method="post" enctype="multipart/form-data">
-        <div class="container">
-            <div class="">
-                <div id="success" class="" role="alert" style="display: none;">
-                    Successfully delete admin!!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+    <div class="main">
 
-                <div id="failed" class="" role="alert" style="display: none;">
-                    Fail to delete admin!!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-
-                <label>
-                    <span class="FieldInfo">Staff ID: </span>
-                </label>
-                <input type="text" id="country" name="Staff_id" value="<?php echo $staff_id ?>" readonly>
-
-                <label>
-                    <span class="FieldInfo">Admin Name: </span>
-                </label>
-                <input type="text" name="admin_name" placeholder="Name" value="<?php echo $staff_name ?>" readonly>
-
-                <label>
-                    <span class="FieldInfo">Username: </span>
-                </label>
-                <input type="text" name="username" placeholder="Username" value="<?php echo $staff_username ?>" readonly>
-
-                <label>
-                    <span class="FieldInfo">Admin position: </span>
-                </label>
-
-                <input class="form-control" list="admin_position" name="admin_position" value="<?php echo $staff_position ?>" readonly>
-
+        <form class="" action="deleteadmin.php?admin_id=<?php echo $staff_id ?>" method="post" enctype="multipart/form-data">
+            <div class="container">
                 <div class="">
-                    <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
+                    <div id="success" class="" role="alert" style="display: none;">
+                        Successfully delete admin!!
+                        
+                    </div>
+
+                    <div id="failed" class="" role="alert" style="display: none;">
+                        Fail to delete admin!!
+                        
+                    </div>
+
+                    <label>
+                        <span class="FieldInfo">Staff ID: </span>
+                    </label>
+                    <input type="text" id="country" name="Staff_id" value="<?php echo $staff_id ?>" readonly>
+
+                    <label>
+                        <span class="FieldInfo">Admin Name: </span>
+                    </label>
+                    <input type="text" name="admin_name" placeholder="Name" value="<?php echo $staff_name ?>" readonly>
+
+                    <label>
+                        <span class="FieldInfo">Username: </span>
+                    </label>
+                    <input type="text" name="username" placeholder="Username" value="<?php echo $staff_username ?>" readonly>
+
+                    <label>
+                        <span class="FieldInfo">Admin position: </span>
+                    </label>
+
+                    <input class="form-control" list="admin_position" name="admin_position" value="<?php echo $staff_position ?>" readonly>
+
+                    <div class="">
+                        <button type="submit" class="btn btn-outline-light w-100" name="publish"><i class="fas fa-check"></i>Publish</button>
+                    </div>
+
                 </div>
-
             </div>
-        </div>
-    </form>
+        </form>
 
-    <a href="manageadmin.php"><button class=""><i class="fas fa-arrow-left"></i>
-            Back</button></a>
+        <a href="manageadmin.php"><button class=""><i class="fas fa-arrow-left"></i>
+                Back</button></a>
+
+    </div>
 
     <script type="text/javascript">
         var success = "<?php echo $Success ?>";
