@@ -24,11 +24,28 @@ while ($DataRows = $stmt->fetch()) {
 
 // check if the delete button was clicked
 if (isset($_POST["submit"])) {
-    // delete the customer record from the database
-    $sql_delete = "DELETE FROM customers WHERE CustomerID = '$customer_id'";
-    $Execute = $ConnectingDB->query($sql_delete);
-    // set the success flag to true
-    $Success = true;
+    //check if customer have made any reservation
+    // prepare the SQL statement to check if a record exists in the table
+    $stmt = $ConnectingDB->prepare('SELECT * FROM reservations WHERE CustomerID = :value');
+
+    // bind the value to the parameter
+    $stmt->bindParam(':value', $customer_id);
+
+    // execute the query
+    $stmt->execute();
+
+    // check if there is at least one row returned
+    if ($stmt->rowCount() > 0) {
+        // record exists
+        $Failed = true;
+    } else {
+        // record does not exist
+        // delete the customer record from the database
+        $sql_delete = "DELETE FROM customers WHERE CustomerID = '$customer_id'";
+        $Execute = $ConnectingDB->query($sql_delete);
+        // set the success flag to true
+        $Success = true;
+    }
 }
 
 
@@ -52,7 +69,7 @@ if (isset($_POST["submit"])) {
 <body>
     <nav class="">
         <div class="container">
-            
+
             <div class="navbar-brand">
                 <a href="#" id="Booking_System">Booking System</a>
             </div>
@@ -95,12 +112,10 @@ if (isset($_POST["submit"])) {
         <form class="" action="deletecustomer.php?customer_id=<?php echo $customer_id ?>" method="post" enctype="multipart/form-data">
             <div id="success" class="" role="alert" style="display: none;">
                 Successfully delete customer!!
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
 
             <div id="failed" class="" role="alert" style="display: none;">
-                Fail to delete customer!!
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                Fail to delete customer!! The customer has a car reservation. Please cancel the reservation in order to delete the customer.
             </div>
 
             <label>
