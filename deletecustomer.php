@@ -71,7 +71,7 @@ if (isset($_POST["submit"])) {
         <div class="container">
 
             <div class="navbar-brand">
-                <a href="#" id="Booking_System">Booking System</a>
+                <a href="dashboard.php" id="Booking_System">Booking System</a>
             </div>
 
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -82,16 +82,13 @@ if (isset($_POST["submit"])) {
                     <li class="nav-item">
                         <a class="nav-link" href="checkavailability.php"><i class="fa-solid fa-table-list"></i> Check Availability</a>
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="newcustomerbooking.php"><i class="fa-solid fa-plus"></i> New Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-pen"></i> Edit Booking</a>
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-pen"></i> Update Booking</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-xmark"></i> Cancel Booking</a>
-                    </li>
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="nav-link" href="managecustomer.php"><i class="fa-solid fa-list-check"></i> Manage Customer</a>
                     </li>
                     <li class="nav-item">

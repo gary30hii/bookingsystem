@@ -116,7 +116,7 @@ if (isset($_POST["submit"])) { // Check if the form has been submitted
         <div class="container">
             
             <div class="navbar-brand">
-                <a href="#" id="Booking_System">Booking System</a>
+                <a href="dashboard.php" id="Booking_System">Booking System</a>
             </div>
 
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -131,10 +131,7 @@ if (isset($_POST["submit"])) { // Check if the form has been submitted
                         <a class="nav-link" href="newcustomerbooking.php"><i class="fa-solid fa-plus"></i> New Booking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-pen"></i> Edit Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-xmark"></i> Cancel Booking</a>
+                        <a class="nav-link" href="updatebooking.php"><i class="fa-solid fa-pen"></i> Update Booking</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="managecustomer.php"><i class="fa-solid fa-list-check"></i> Manage Customer</a>
