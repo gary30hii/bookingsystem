@@ -5,6 +5,7 @@ ini_set('display_errors', '1');
 require_once("include/db.php");
 require_once("include/logout.php");
 require_once("include/main.php");
+session_start();
 
 // Construct the SQL query to select all rows from the "admins" table
 $sql_admin = "SELECT * FROM admins";
@@ -15,7 +16,7 @@ $stmt = $ConnectingDB->query($sql_admin);
 // Iterate through each row of the result set
 while ($DataRows = $stmt->fetch()) {
     // Check if the current row's "Username" column matches the $admin variable
-    if ($admin == $DataRows["Username"]) {
+    if ($_SESSION['admin'] == $DataRows["Username"]) {
         // If there is a match, store the admin's name and position in variables
         $admin_name = $DataRows["StaffName"];
         $admin_position = $DataRows["Position"];
